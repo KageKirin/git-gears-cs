@@ -6,4 +6,8 @@
     <RootNamespace>git_gears</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.6.0" />
+  </ItemGroup>
+
 </Project>
