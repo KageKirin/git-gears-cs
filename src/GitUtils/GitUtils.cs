@@ -95,9 +95,10 @@ class GitUtils
 			{
 				Console.WriteLine($"name: {r.Name}");
 				Console.WriteLine($"url: {r.Url}");
-				var giturl = $"ssh://{r.Url}";
-				var uri = new Uri(giturl, uriKind: UriKind.Absolute);
-				Console.WriteLine($"host: {uri.Host}");
+				var gitUrl = new GitUrl(r.Url);
+				Console.WriteLine($"host: {gitUrl.Host}");
+				Console.WriteLine($"owner: {gitUrl.Owner}");
+				Console.WriteLine($"name: {gitUrl.RepoName}");
 
 			}
 
