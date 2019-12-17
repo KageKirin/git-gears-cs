@@ -74,7 +74,7 @@ class GitUtils
 	{
 		using(var repo = new Repository(FindCurrentRepoPath()))
 		{
-			foreach(var configLevel in Enum.GetValues(typeof(ConfigurationLevel)).Cast<ConfigurationLevel>().Reverse())
+			foreach(var configLevel in Enum.GetValues(typeof (ConfigurationLevel)).Cast<ConfigurationLevel>().Reverse())
 			{
 				if (repo.Config.HasConfig(configLevel))
 				{
@@ -123,7 +123,6 @@ class GitUtils
 		return GetGearsConfigEntry("token", remoteName);
 	}
 
-
 	/// testing function
 	public static void TestPrintInfo()
 	{
@@ -145,7 +144,6 @@ class GitUtils
 			Console.WriteLine($"{repo.Head.FriendlyName}");
 			Console.WriteLine($"{repo.Head.RemoteName}");
 			Console.WriteLine($"{repo.Head.UpstreamBranchCanonicalName}");
-			
 		}
 	}
 
@@ -156,7 +154,6 @@ class GitUtils
 			Console.WriteLine(repo.Config.HasConfig(ConfigurationLevel.System));
 			Console.WriteLine(repo.Config.HasConfig(ConfigurationLevel.Global));
 			Console.WriteLine(repo.Config.HasConfig(ConfigurationLevel.Local));
-
 
 			foreach(var c in repo.Config)
 			{
@@ -180,8 +177,6 @@ class GitUtils
 					Console.WriteLine("{0} -> {1}", c.Key, c.Value);
 				}
 			}
-
-
 		}
 	}
 }
