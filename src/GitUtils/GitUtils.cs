@@ -64,7 +64,40 @@ class GitUtils
 		}
 	}
 
-	public static string GetAuthBearerToken(string remoteName)
+	/// <summary>
+	/// Retrieves the git-config entry for the given key
+	/// by iterating the configs from local -> global -> system
+	/// </summary>
+	/// <returns>value of key or null</returns>
+
+	public static string GetConfigEntry(string key)
+	{
+		using(var repo = new Repository(FindCurrentRepoPath()))
+		{
+			foreach(var configLevel in Enum.GetValues(typeof(ConfigurationLevel)).Cast<ConfigurationLevel>().Reverse())
+			{
+				if (repo.Config.HasConfig(configLevel))
+				{
+					foreach(var entry in repo.Config.Find(key, configLevel))
+					{
+						return entry.Value;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	/// <summary>
+	/// Retrieves the git-config 'gears' entry for the given key and remote
+	/// gears entries must be set as follows in git-config
+	/// ```
+	/// [gears "host.name"]
+	/// 	key = value
+	/// ```
+	/// </summary>
+	/// <returns>value of key or null</returns>
+	public static string GetGearsConfigEntry(string key, string remoteName)
 	{
 		if (remoteName == null)
 		{
@@ -72,21 +105,29 @@ class GitUtils
 		}
 		using(var repo = new Repository(FindCurrentRepoPath()))
 		{
-			var remoteUrl = repo.Network.Remotes[remoteName].Url;
-			var remoteUri = new Uri(remoteUrl);
-			//remoteUri.Host
+			var url = new GitUrl(repo.Network.Remotes[remoteName].Url);
+			var gearsKey = $"gears.{url.Host}.{key}";
 
-			foreach(var configLevel in Enum.GetValues(typeof(ConfigurationLevel)).Cast<ConfigurationLevel>().Reverse())
-			{
-				if (repo.Config.HasConfig(configLevel))
-				{
-					//string gearsKey = $""
-				}
-			}
-			return "";
+			return GetConfigEntry(gearsKey);
 		}
 	}
 
+	/// <summary>
+	/// Retrieves the git-config 'gears' GraphQL API token for the given remote
+	/// Token must be set as follows:
+	/// ```
+	/// [gears "host.name"]
+	/// 	token = tokenasgivenbyhostapi
+	/// ```
+	/// </summary>
+	/// <returns>value of key or null</returns>
+	public static string GetGearsAuthBearerToken(string remoteName)
+	{
+		return GetGearsConfigEntry("token", remoteName);
+	}
+
+
+	/// testing function
 	public static void TestPrintInfo()
 	{
 		using(var repo = new Repository(FindCurrentRepoPath()))
@@ -100,6 +141,7 @@ class GitUtils
 				Console.WriteLine($"owner: {gitUrl.Owner}");
 				Console.WriteLine($"name: {gitUrl.RepoName}");
 
+				Console.WriteLine($"bearer token: {GetGearsAuthBearerToken(r.Name)}");
 			}
 
 			Console.WriteLine($"{repo.Head.CanonicalName}");
