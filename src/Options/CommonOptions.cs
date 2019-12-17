@@ -11,20 +11,18 @@ public abstract class CommonOptions
 		set;
 	}
 
-	[Value(0, MetaName = "remote", HelpText = "Remote.", Default="origin")]
+	[Value(0, MetaName = "remote", HelpText = "Remote.", Default = null)]
 	public string Remote
 	{
 		get;
 		set;
 	}
 
-	[Value(1, MetaName = "branch", HelpText = "Branch.", Default="current")] //TODO: Default="current branch"
-	public string Branch
+	[Value(1, MetaName = "branch", HelpText = "Branch.", Default = null)] // TODO: Default="current branch"
+		public string Branch
 	{
 		get;
 		set;
 	}
-
-	
 }
 }
