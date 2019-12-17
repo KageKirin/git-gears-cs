@@ -16,7 +16,8 @@ class Program
 							ListGistsOptions,		 //
 							ListIssuesOptions,		 //
 							ListPullRequestsOptions, //
-							ListReposOptions>(args)
+							ListReposOptions,		 //
+							TestOptions>(args)
 			.MapResult((GetGistOptions opts) => GetGist.Execute(opts), //
 					   (GetIssueOptions opts) => GetIssue.Execute(opts),
 					   (GetPullRequestOptions opts) => GetPullRequest.Execute(opts),
@@ -24,7 +25,8 @@ class Program
 					   (ListGistsOptions opts) => ListGists.Execute(opts),
 					   (ListIssuesOptions opts) => ListIssues.Execute(opts),
 					   (ListPullRequestsOptions opts) => ListPullRequests.Execute(opts),
-					   (ListReposOptions opts) => ListRepos.Execute(opts), (errs) => 1);
+					   (TestOptions opts) => Test.Execute(opts), (ListReposOptions opts) => ListRepos.Execute(opts),
+					   (errs) => 1);
 	}
 }
 }
