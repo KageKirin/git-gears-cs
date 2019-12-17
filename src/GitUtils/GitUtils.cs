@@ -14,7 +14,7 @@ class GitUtils
 	/// <returns>path to .git</returns>
 	static string FindCurrentRepoPath(string currentPath = null)
 	{
-		var currentDir = new DirectoryInfo((currentPath != null) ? currentPath : Directory.GetCurrentDirectory());
+		var currentDir = new DirectoryInfo(currentPath ?? Directory.GetCurrentDirectory());
 		while (currentDir != null)
 		{
 			string gitDirPath = null;
@@ -27,7 +27,7 @@ class GitUtils
 
 			/// usual repo naming convention
 			var gitDirs = currentDir.EnumerateDirectories(".git");
-			if (gitDirs.Count() > 0)
+			if (gitDirs.Any())
 			{
 				gitDirPath = gitDirs.First().FullName;
 			}
@@ -99,10 +99,7 @@ class GitUtils
 	/// <returns>value of key or null</returns>
 	public static string GetGearsConfigEntry(string key, string remoteName)
 	{
-		if (remoteName == null)
-		{
-			remoteName = GetCurrentRemote();
-		}
+		remoteName = remoteName ?? GetCurrentRemote();
 		using(var repo = new Repository(FindCurrentRepoPath()))
 		{
 			var url = new GitUrl(repo.Network.Remotes[remoteName].Url);
