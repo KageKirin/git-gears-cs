@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +15,20 @@
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.4.4" />
     <PackageReference Include="McMaster.NETCore.Plugins" Version="0.3.2" />
     <PackageReference Include="RazorLight" Version="1.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="types.cshtml" />
+    <EmbeddedResource Include="client.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Antlr4 Update="GraphQLSchema.g4">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>GraphQLSchema.Grammer</CustomToolNamespace>
+      <Listener>False</Listener>
+      <Visitor>True</Visitor>
+    </Antlr4>
   </ItemGroup>
 
 </Project>
