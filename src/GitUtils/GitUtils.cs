@@ -123,6 +123,26 @@ class GitUtils
 		return GetGearsConfigEntry("token", remoteName);
 	}
 
+	/// <summary>
+	/// Retrieves the git-config 'gears' GraphQL API Endpoint URL for the given remote
+	/// Token must be set as follows:
+	/// ```
+	/// [gears "host.name"]
+	/// 	url = https://service.com/graphql
+	/// ```
+	///
+	/// Common endpoints are:
+	/// https://api.github.com/graphql for public GitHub
+	/// https://host.name/api/graphql for corporate GitHub Enterprise
+	/// https://gitlab.com/api/graphql for public GitLab
+	///
+	/// </summary>
+	/// <returns>value of key or null</returns>
+	public static string GetGearsEndpointUrl(string remoteName)
+	{
+		return GetGearsConfigEntry("url", remoteName);
+	}
+
 	/// testing function
 	public static void TestPrintInfo()
 	{
