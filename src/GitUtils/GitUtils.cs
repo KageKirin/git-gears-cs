@@ -179,6 +179,23 @@ class GitUtils
 		return GearsApiType.Invalid;
 	}
 
+
+	static public GitUrl GetRemoteUrl(string remote)
+	{
+		using(var repo = new Repository(FindCurrentRepoPath()))
+		{
+			var repoRemote = repo.Network.Remotes[remote];
+			if (repoRemote != null)
+				return new GitUrl(repoRemote.Url);
+			return null;
+		}
+	}
+
+	public static GitUrl GetCurrentRemoteUrl()
+	{
+		return GetRemoteUrl(GetCurrentRemote());
+	}
+
 	/// testing function
 	public static void TestPrintInfo()
 	{
