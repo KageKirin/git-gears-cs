@@ -12,7 +12,7 @@ class GitUtils
 	/// find the .git repo path for current repo
 	/// </summary>
 	/// <returns>path to .git</returns>
-	static string FindCurrentRepoPath(string currentPath = null)
+	static public string FindCurrentRepoPath(string currentPath = null)
 	{
 		var currentDir = new DirectoryInfo(currentPath ?? Directory.GetCurrentDirectory());
 		while (currentDir != null)
