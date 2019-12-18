@@ -135,12 +135,48 @@ class GitUtils
 	/// https://api.github.com/graphql for public GitHub
 	/// https://host.name/api/graphql for corporate GitHub Enterprise
 	/// https://gitlab.com/api/graphql for public GitLab
-	///
 	/// </summary>
 	/// <returns>value of key or null</returns>
 	public static string GetGearsEndpointUrl(string remoteName)
 	{
 		return GetGearsConfigEntry("url", remoteName);
+	}
+
+	/// <summary>
+	/// Defines a type for Gears API
+	/// Currently, only GitHub and GitLab are defined and implemented
+	/// </summary>
+	public enum GearsApiType
+	{
+		Invalid,
+		GitHub,
+		GitLab,
+	}
+
+	/// <summary>
+	/// Retrieves the typed Gears API Type for the given remote
+	/// Token must be set as follows:
+	/// ```
+	/// [gears "host.name"]
+	/// 	api = type
+	/// ```
+	///
+	/// Valid values are:
+	/// - github
+	/// - gitlab
+	/// </summary>
+	/// <returns>value of key or Invalid</returns>
+	public static GearsApiType GetGearsApiType(string remoteName)
+	{
+		const bool ignoreCase = true;
+		try
+		{
+			return (GearsApiType) Enum.Parse(typeof (GearsApiType), GetGearsConfigEntry("api", remoteName), ignoreCase);
+		}
+		catch (ArgumentException)
+		{
+		}
+		return GearsApiType.Invalid;
 	}
 
 	/// testing function
