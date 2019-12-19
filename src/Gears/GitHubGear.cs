@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 using GraphQL.Client;
 using GraphQL.Common.Request;
 using GraphQL.Common.Response;
@@ -39,6 +40,47 @@ public class GitHubGear : CommonGear, IGear
 		{
 			Console.WriteLine($"{graphQLHttpResponse.Data.ToString()}");
 		}
+	}
+
+	public Gist GetGist()
+	{
+		return new Gist();
+	}
+
+	public Issue GetIssue()
+	{
+		return new Issue();
+	}
+
+	public PullRequest GetPullRequest()
+	{
+		return new PullRequest();
+	}
+
+	public Repo GetRepo()
+	{
+		return new Repo();
+	}
+
+
+	public IEnumerable<Gist> ListGists()
+	{
+		return new List<Gist>() as IEnumerable<Gist>;
+	}
+
+	public IEnumerable<Issue> ListIssues()
+	{
+		return new List<Issue>() as IEnumerable<Issue>;
+	}
+
+	public IEnumerable<PullRequest> ListPullRequests()
+	{
+		return new List<PullRequest>() as IEnumerable<PullRequest>;
+	}
+
+	public IEnumerable<Repo> ListRepos()
+	{
+		return new List<Repo>() as IEnumerable<Repo>;
 	}
 }
 }
