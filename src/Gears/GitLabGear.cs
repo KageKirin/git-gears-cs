@@ -37,7 +37,7 @@ public class GitLabGear : CommonGear, IGear
 		return new GistInfo();
 	}
 
-	public IssueInfo? GetIssue()
+	public IssueInfo? GetIssue(int number)
 	{
 		return new IssueInfo();
 	}
