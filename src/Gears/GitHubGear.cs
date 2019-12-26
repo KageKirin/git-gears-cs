@@ -368,7 +368,7 @@ public class GitHubGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public GistInfo? GetGist()
+	public GistInfo? GetGist(string name)
 	{
 		return null;
 	}
