@@ -323,12 +323,70 @@ public class GitHubGear : CommonGear, IGear
 
 	public GistInfo? GetGist()
 	{
-		return new GistInfo();
+		return null;
 	}
 
 	public IEnumerable<GistInfo>ListGists()
 	{
-		return new List<GistInfo>() as IEnumerable<GistInfo>;
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query($_owner: String!, $_count: Int!)
+			{
+				user(login: $_owner)
+				{
+					gists(first: $_count)
+					{
+						nodes
+						{
+							id,
+							name,
+							description,
+							createdAt,
+							pushedAt,
+							files
+							{
+								name,
+								text,
+							}
+						}
+					}
+				}
+			}",
+			Variables = new {
+				_owner = RepoUrl.Owner,
+				_count = 100,
+			}
+		};
+		// clang-format on
+		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		if (gqlResponse.Data != null)
+		{
+			Console.WriteLine($"{gqlResponse.Data.ToString()} {gqlResponse.Errors}");
+			var list = new List<GistInfo>();
+
+			if (gqlResponse.Data.user.gists.nodes != null)
+			{
+				foreach(var n in gqlResponse.Data.user.gists.nodes)
+				{
+					list.Add(ToGistInfo(n));
+				}
+			}
+
+			return list as IEnumerable<GistInfo>;
+		}
+		return null;
+	}
+
+	private GistInfo ToGistInfo(dynamic gqlData)
+	{
+		var gist = new GistInfo();
+		gist.Id = gqlData.id;
+		gist.Name = gqlData.name;
+		gist.Description = gqlData.description;
+		gist.CreatedAt = gqlData.createdAt;
+		gist.PushedAt = gqlData.pushedAt;
+		return gist;
 	}
 
 	///////////////////////////////////////////////////////////////////////////
