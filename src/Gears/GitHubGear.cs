@@ -49,6 +49,42 @@ public class GitHubGear : CommonGear, IGear
 
 	public IssueInfo? GetIssue(int number)
 	{
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query($_owner: String!, $_name: String!, $_number: Int !)
+			{
+				repository(owner: $_owner, name: $_name)
+				{
+					id,
+					name,
+					url,
+					issue(number: $_number)
+					{
+						number,
+						bodyText,
+						state,
+						title,
+						url,
+					}
+				}
+			} ",
+			Variables = new {
+				_owner = RepoUrl.Owner,
+				_name = RepoUrl.RepoName,
+				_number = number,
+			}
+		};
+		// clang-format on
+		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		if (gqlResponse.Data != null)
+		{
+			Console.WriteLine($"{gqlResponse.Data.ToString()}");
+			if (gqlResponse.Data.repository.issue != null)
+			{
+				return ToIssueInfo(gqlResponse.Data.repository.issue);
+			}
+		}
 		return null;
 	}
 
