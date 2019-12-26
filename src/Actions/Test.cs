@@ -32,6 +32,8 @@ public class Test
 			gear.ListPullRequests();
 			Console.WriteLine("-- ListIssues --");
 			gear.ListIssues();
+			Console.WriteLine("-- ListGists --");
+			gear.ListGists();
 		}
 
 		return 0;
