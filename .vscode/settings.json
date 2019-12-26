@@ -14,5 +14,12 @@
         "statusBarItem.hoverBackground": "#326fcb",
         "statusBar.foreground": "#15202b"
     },
-    "peacock.color": "#5a8bd6"
+    "peacock.color": "#5a8bd6",
+    "files.associations": {
+        ".gclient": "python",
+        "DEPS": "python",
+        "*.DEPS": "python",
+        "*.pch": "cpp",
+        "gitmun.h": "c"
+    }
 }
