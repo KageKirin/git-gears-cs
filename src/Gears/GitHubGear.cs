@@ -151,7 +151,7 @@ public class GitHubGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public PullRequestInfo? GetPullRequest()
+	public PullRequestInfo? GetPullRequest(string branch)
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -183,7 +183,7 @@ public class GitHubGear : CommonGear, IGear
 			Variables = new {
 				_owner = RepoUrl.Owner,
 				_name = RepoUrl.RepoName,
-				_branch = "getlist-impl", // TODO
+				_branch = branch,
 			}
 		};
 		// clang-format on

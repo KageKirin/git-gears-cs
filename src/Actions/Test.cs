@@ -27,7 +27,7 @@ public class Test
 			Console.WriteLine("-- GetRepo --");
 			gear.GetRepo();
 			Console.WriteLine("-- GetPullRequest --");
-			gear.GetPullRequest();
+			gear.GetPullRequest(GitUtils.GetCurrentBranch());
 			Console.WriteLine("-- ListPullRequests --");
 			gear.ListPullRequests();
 			Console.WriteLine("-- ListIssues --");
