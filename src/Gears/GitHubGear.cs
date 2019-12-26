@@ -370,6 +370,40 @@ public class GitHubGear : CommonGear, IGear
 
 	public GistInfo? GetGist(string name)
 	{
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query($_owner: String!, $_name:String!)
+			{
+				user(login: $_owner)
+				{
+					gist(name:$_name)
+					{
+						id,
+						name,
+						description,
+						createdAt,
+						pushedAt,
+						files
+						{
+							name,
+							text,
+						}
+					}
+				}
+			}",
+			Variables = new {
+				_owner = RepoUrl.Owner,
+				_name = name,
+			}
+		};
+		// clang-format on
+		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		if (gqlResponse.Data != null)
+		{
+			Console.WriteLine($"{gqlResponse.Data.ToString()}");
+			return ToGistInfo(gqlResponse.Data.user.gist);
+		}
 		return null;
 	}
 
