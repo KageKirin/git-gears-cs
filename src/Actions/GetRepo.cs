@@ -13,12 +13,12 @@ public class GetRepo
 
 		if (gear != null)
 		{
-			var repo = gear.GetRepo();
-			if (repo != null)
+			RepoInfo? repo = gear.GetRepo();
+			if (repo.HasValue)
 			{
 				Console.WriteLine($"Repo for {opts.Remote}");
-				Console.WriteLine($"{repo.Name} -- {repo.Description}");
-				Console.WriteLine($"{repo.Url}");
+				Console.WriteLine($"{repo.Value.Name} -- {repo.Value.Description}");
+				Console.WriteLine($"{repo.Value.Url}");
 			}
 			else
 			{

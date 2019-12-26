@@ -32,44 +32,44 @@ public class GitLabGear : CommonGear, IGear
 		}
 	}
 
-	public Gist GetGist()
+	public GistInfo? GetGist()
 	{
-		return new Gist();
+		return new GistInfo();
 	}
 
-	public Issue GetIssue()
+	public IssueInfo? GetIssue()
 	{
-		return new Issue();
+		return new IssueInfo();
 	}
 
-	public PullRequest GetPullRequest()
+	public PullRequestInfo? GetPullRequest()
 	{
-		return new PullRequest();
+		return new PullRequestInfo();
 	}
 
-	public Repo GetRepo()
+	public RepoInfo? GetRepo()
 	{
-		return new Repo();
+		return new RepoInfo();
 	}
 
-	public IEnumerable<Gist>ListGists()
+	public IEnumerable<GistInfo>ListGists()
 	{
-		return new List<Gist>() as IEnumerable<Gist>;
+		return new List<GistInfo>() as IEnumerable<GistInfo>;
 	}
 
-	public IEnumerable<Issue>ListIssues()
+	public IEnumerable<IssueInfo>ListIssues()
 	{
-		return new List<Issue>() as IEnumerable<Issue>;
+		return new List<IssueInfo>() as IEnumerable<IssueInfo>;
 	}
 
-	public IEnumerable<PullRequest>ListPullRequests()
+	public IEnumerable<PullRequestInfo>ListPullRequests()
 	{
-		return new List<PullRequest>() as IEnumerable<PullRequest>;
+		return new List<PullRequestInfo>() as IEnumerable<PullRequestInfo>;
 	}
 
-	public IEnumerable<Repo>ListRepos()
+	public IEnumerable<RepoInfo>ListRepos()
 	{
-		return new List<Repo>() as IEnumerable<Repo>;
+		return new List<RepoInfo>() as IEnumerable<RepoInfo>;
 	}
 }
 }
