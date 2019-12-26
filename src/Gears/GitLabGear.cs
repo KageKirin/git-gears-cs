@@ -32,12 +32,12 @@ public class GitLabGear : CommonGear, IGear
 		// clang-format on
 		Console.WriteLine($"{gqlRequest.Query}");
 		// Console.WriteLine($"{gqlRequest.Variables}");
-		GraphQLResponse graphQLHttpResponse = Client.PostAsync(gqlRequest).Result;
-		Console.WriteLine($"{graphQLHttpResponse.Data != null}");
+		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		Console.WriteLine($"{gqlResponse.Data != null}");
 
-		if (graphQLHttpResponse.Data != null)
+		if (gqlResponse.Data != null)
 		{
-			Console.WriteLine($"{graphQLHttpResponse.Data.ToString()}");
+			Console.WriteLine($"{gqlResponse.Data.ToString()}");
 		}
 	}
 
@@ -69,12 +69,96 @@ public class GitLabGear : CommonGear, IGear
 
 	public RepoInfo? GetRepo()
 	{
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query($_fullPath: ID!)
+			{
+				project(fullPath: $_fullPath)
+				{
+					id,
+					webUrl,
+					name,
+					description,
+					fullPath,
+					createdAt,
+					lastActivityAt,
+				}
+			}",
+			Variables = new {
+				_fullPath = $"{RepoUrl.Owner}/{RepoUrl.RepoName}",
+			}
+		};
+		// clang-format on
+		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		Console.WriteLine($"{gqlResponse.Data != null}");
+		if (gqlResponse.Data != null)
+		{
+			Console.WriteLine($"{gqlResponse.Data.ToString()}");
+			return ToRepoInfo(gqlResponse.Data.project);
+		}
 		return null;
 	}
 
 	public IEnumerable<RepoInfo>ListRepos()
 	{
-		return new List<RepoInfo>() as IEnumerable<RepoInfo>;
+		// TODO: count first, then query while iterating to get full count
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query($_owner: ID!, $_count: Int!)
+			{
+				namespace(fullPath: $_owner)
+				{
+					projects(first: $_count)
+					{
+						nodes
+						{
+							id,
+							webUrl,
+							name,
+							description,
+							fullPath,
+							createdAt,
+							lastActivityAt,
+						}
+					}
+				}
+			}",
+			Variables = new {
+				_owner = RepoUrl.Owner,
+				_count = 100,
+			}
+		};
+		// clang-format on
+		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		if (gqlResponse.Data != null)
+		{
+			Console.WriteLine($"{gqlResponse.Data.ToString()}");
+			var list = new List<RepoInfo>();
+
+			if (gqlResponse.Data["namespace"].projects.nodes != null)
+			{
+				foreach(var n in gqlResponse.Data["namespace"].projects.nodes)
+				{
+					list.Add(ToRepoInfo(n));
+				}
+			}
+
+			return list as IEnumerable<RepoInfo>;
+		}
+		return null;
+	}
+
+	private RepoInfo ToRepoInfo(dynamic gqlData)
+	{
+		var repo = new RepoInfo();
+		repo.Id = gqlData.id;
+		repo.Url = gqlData.webUrl;
+		repo.Name = gqlData.name;
+		repo.Path = gqlData.fullPath;
+		repo.Description = gqlData.description;
+		return repo;
 	}
 
 	///////////////////////////////////////////////////////////////////////////
