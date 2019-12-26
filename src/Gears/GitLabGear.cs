@@ -41,22 +41,45 @@ public class GitLabGear : CommonGear, IGear
 		}
 	}
 
-	public GistInfo? GetGist(string name)
-	{
-		return null;
-	}
+	///////////////////////////////////////////////////////////////////////////
 
 	public IssueInfo? GetIssue(int number)
 	{
 		return null;
 	}
 
+	public IEnumerable<IssueInfo>ListIssues()
+	{
+		return new List<IssueInfo>() as IEnumerable<IssueInfo>;
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+
 	public PullRequestInfo? GetPullRequest(string branch)
 	{
 		return null;
 	}
 
+	public IEnumerable<PullRequestInfo>ListPullRequests()
+	{
+		return new List<PullRequestInfo>() as IEnumerable<PullRequestInfo>;
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+
 	public RepoInfo? GetRepo()
+	{
+		return null;
+	}
+
+	public IEnumerable<RepoInfo>ListRepos()
+	{
+		return new List<RepoInfo>() as IEnumerable<RepoInfo>;
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+
+	public GistInfo? GetGist(string name)
 	{
 		return null;
 	}
@@ -66,19 +89,6 @@ public class GitLabGear : CommonGear, IGear
 		return new List<GistInfo>() as IEnumerable<GistInfo>;
 	}
 
-	public IEnumerable<IssueInfo>ListIssues()
-	{
-		return new List<IssueInfo>() as IEnumerable<IssueInfo>;
-	}
-
-	public IEnumerable<PullRequestInfo>ListPullRequests()
-	{
-		return new List<PullRequestInfo>() as IEnumerable<PullRequestInfo>;
-	}
-
-	public IEnumerable<RepoInfo>ListRepos()
-	{
-		return new List<RepoInfo>() as IEnumerable<RepoInfo>;
-	}
+	///////////////////////////////////////////////////////////////////////////
 }
 }
