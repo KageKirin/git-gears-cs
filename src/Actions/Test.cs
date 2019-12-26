@@ -21,7 +21,18 @@ public class Test
 		var gear = GearFactory.CreateGear(opts.Remote);
 		Console.WriteLine($"gear: {gear.ToString()}");
 		if (gear != null)
+		{
+			Console.WriteLine("-- Test --");
 			gear.Test();
+			Console.WriteLine("-- GetRepo --");
+			gear.GetRepo();
+			Console.WriteLine("-- GetPullRequest --");
+			gear.GetPullRequest();
+			Console.WriteLine("-- ListPullRequests --");
+			gear.ListPullRequests();
+			Console.WriteLine("-- ListIssues --");
+			gear.ListIssues();
+		}
 
 		return 0;
 	}
