@@ -47,7 +47,7 @@ public class GitHubGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public IssueInfo? GetIssue()
+	public IssueInfo? GetIssue(int number)
 	{
 		return new IssueInfo();
 	}
