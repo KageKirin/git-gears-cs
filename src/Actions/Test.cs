@@ -34,6 +34,8 @@ public class Test
 			gear.ListIssues();
 			Console.WriteLine("-- ListGists --");
 			gear.ListGists();
+			Console.WriteLine("-- ListRepos --");
+			gear.ListRepos();
 		}
 
 		return 0;
