@@ -19,23 +19,18 @@ public class GitHubGear : CommonGear, IGear
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
 			Query = @"
-			query($_owner: String!, $_name: String!)
+			query
 			{
-				repository(owner: $_owner, name: $_name)
+				viewer
 				{
-					id,
-					name,
-					url
+					login
 				}
-			} ",
-			Variables = new {
-				_owner = RepoUrl.Owner,
-				_name = RepoUrl.RepoName,
-			}
+			}",
+			//Variables = new {}
 		};
 		// clang-format on
 		Console.WriteLine($"{gqlRequest.Query}");
-		Console.WriteLine($"{gqlRequest.Variables}");
+		// Console.WriteLine($"{gqlRequest.Variables}");
 		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
 		Console.WriteLine($"{gqlResponse.Data != null}");
 

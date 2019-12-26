@@ -16,14 +16,23 @@ public class GitLabGear : CommonGear, IGear
 
 	public void Test()
 	{
-		var graphQLHttpRequest =
-			new GraphQLRequest{Query = @" query($_fullPath
-												: ID !){project(fullPath
-																: $_fullPath){id, name, webUrl}} ",
-							   Variables = new {_fullPath = $"{RepoUrl.Owner}/{RepoUrl.RepoName}"}};
-		Console.WriteLine($"{graphQLHttpRequest.Query}");
-		Console.WriteLine($"{graphQLHttpRequest.Variables}");
-		GraphQLResponse graphQLHttpResponse = Client.PostAsync(graphQLHttpRequest).Result;
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query
+			{
+				currentUser
+				{
+					username,
+					name
+				}
+			}",
+			//Variables = new {_fullPath = $"{RepoUrl.Owner}/{RepoUrl.RepoName}"}};
+		};
+		// clang-format on
+		Console.WriteLine($"{gqlRequest.Query}");
+		// Console.WriteLine($"{gqlRequest.Variables}");
+		GraphQLResponse graphQLHttpResponse = Client.PostAsync(gqlRequest).Result;
 		Console.WriteLine($"{graphQLHttpResponse.Data != null}");
 
 		if (graphQLHttpResponse.Data != null)
