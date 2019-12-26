@@ -146,8 +146,7 @@ class GitUtils
 	/// Defines a type for Gears API
 	/// Currently, only GitHub and GitLab are defined and implemented
 	/// </summary>
-	public enum GearsApiType
-	{
+	public enum GearsApiType {
 		Invalid,
 		GitHub,
 		GitLab,
@@ -178,7 +177,6 @@ class GitUtils
 		}
 		return GearsApiType.Invalid;
 	}
-
 
 	static public GitUrl GetRemoteUrl(string remote)
 	{

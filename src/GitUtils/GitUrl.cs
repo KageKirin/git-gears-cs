@@ -104,7 +104,7 @@ public class GitUrl
 
 				if (match.Groups.ContainsKey("port") && !string.IsNullOrEmpty(match.Groups["port"].Value))
 				{
-					Console.WriteLine($"port: {match.Groups["port"].Value}");
+					Console.WriteLine($"port: {match.Groups[" port "].Value}");
 					Port = int.Parse(match.Groups["port"].Value);
 				}
 
