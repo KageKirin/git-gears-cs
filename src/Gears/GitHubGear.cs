@@ -286,6 +286,8 @@ public class GitHubGear : CommonGear, IGear
 					name,
 					description,
 					nameWithOwner,
+					createdAt,
+					pushedAt,
 				}
 			} ",
 			Variables = new {
@@ -298,24 +300,69 @@ public class GitHubGear : CommonGear, IGear
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
-			return ToRepoInfo(gqlResponse.Data);
+			return ToRepoInfo(gqlResponse.Data.repository);
 		}
 		return null;
 	}
 
 	public IEnumerable<RepoInfo>ListRepos()
 	{
-		return new List<RepoInfo>() as IEnumerable<RepoInfo>;
+		// TODO: count first, then query while iterating to get full count
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query($_owner: String!, $_count: Int!)
+			{
+				user(login: $_owner)
+				{
+					repositoriesContributedTo(first: $_count)
+					{
+						nodes
+						{
+							id,
+							url,
+							name,
+							description,
+							nameWithOwner,
+							createdAt,
+							pushedAt,
+						}
+					}
+				}
+			}",
+			Variables = new {
+				_owner = RepoUrl.Owner,
+				_count = 100,
+			}
+		};
+		// clang-format on
+		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		if (gqlResponse.Data != null)
+		{
+			Console.WriteLine($"{gqlResponse.Data.ToString()}");
+			var list = new List<RepoInfo>();
+
+			if (gqlResponse.Data.user.repositoriesContributedTo.nodes != null)
+			{
+				foreach(var n in gqlResponse.Data.user.repositoriesContributedTo.nodes)
+				{
+					list.Add(ToRepoInfo(n));
+				}
+			}
+
+			return list as IEnumerable<RepoInfo>;
+		}
+		return null;
 	}
 
 	private RepoInfo ToRepoInfo(dynamic gqlData)
 	{
 		var repo = new RepoInfo();
-		repo.Id = gqlData.repository.id;
-		repo.Url = gqlData.repository.url;
-		repo.Name = gqlData.repository.name;
-		repo.Path = gqlData.repository.nameWithOwner;
-		repo.Description = gqlData.repository.description;
+		repo.Id = gqlData.id;
+		repo.Url = gqlData.url;
+		repo.Name = gqlData.name;
+		repo.Path = gqlData.nameWithOwner;
+		repo.Description = gqlData.description;
 		return repo;
 	}
 
@@ -362,7 +409,7 @@ public class GitHubGear : CommonGear, IGear
 		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
 		if (gqlResponse.Data != null)
 		{
-			Console.WriteLine($"{gqlResponse.Data.ToString()} {gqlResponse.Errors}");
+			Console.WriteLine($"{gqlResponse.Data.ToString()}");
 			var list = new List<GistInfo>();
 
 			if (gqlResponse.Data.user.gists.nodes != null)
