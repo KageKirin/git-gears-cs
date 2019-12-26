@@ -6,7 +6,7 @@ public interface IGear
 {
 	void Test();
 
-	GistInfo? GetGist();							//! TODO: params
+	GistInfo? GetGist(string name);					//! TODO: params
 	IssueInfo? GetIssue(int number);				//! TODO: params
 	PullRequestInfo? GetPullRequest(string branch); //! TODO: params
 	RepoInfo? GetRepo();							//! TODO: params
