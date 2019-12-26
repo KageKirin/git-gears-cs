@@ -15,7 +15,7 @@ public class GetPullRequest
 
 		if (gear != null)
 		{
-			PullRequestInfo? pr = gear.GetPullRequest(); //(branch)
+			PullRequestInfo? pr = gear.GetPullRequest(branch);
 			if (pr.HasValue)
 			{
 				Console.WriteLine($"PullRequest for {opts.Remote}/{branch}");

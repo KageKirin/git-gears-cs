@@ -42,7 +42,7 @@ public class GitLabGear : CommonGear, IGear
 		return null;
 	}
 
-	public PullRequestInfo? GetPullRequest()
+	public PullRequestInfo? GetPullRequest(string branch)
 	{
 		return null;
 	}
