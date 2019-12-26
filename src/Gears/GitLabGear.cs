@@ -34,22 +34,22 @@ public class GitLabGear : CommonGear, IGear
 
 	public GistInfo? GetGist()
 	{
-		return new GistInfo();
+		return null;
 	}
 
 	public IssueInfo? GetIssue(int number)
 	{
-		return new IssueInfo();
+		return null;
 	}
 
 	public PullRequestInfo? GetPullRequest()
 	{
-		return new PullRequestInfo();
+		return null;
 	}
 
 	public RepoInfo? GetRepo()
 	{
-		return new RepoInfo();
+		return null;
 	}
 
 	public IEnumerable<GistInfo>ListGists()

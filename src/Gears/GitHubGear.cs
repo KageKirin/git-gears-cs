@@ -49,7 +49,7 @@ public class GitHubGear : CommonGear, IGear
 
 	public IssueInfo? GetIssue(int number)
 	{
-		return new IssueInfo();
+		return null;
 	}
 
 	public IEnumerable<IssueInfo>ListIssues()
