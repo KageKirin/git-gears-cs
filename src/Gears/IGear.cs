@@ -6,14 +6,14 @@ public interface IGear
 {
 	void Test();
 
-	Gist GetGist();				  //! TODO: params
-	Issue GetIssue();			  //! TODO: params
-	PullRequest GetPullRequest(); //! TODO: params
-	Repo GetRepo();				  //! TODO: params
+	GistInfo? GetGist();			   //! TODO: params
+	IssueInfo? GetIssue();			   //! TODO: params
+	PullRequestInfo? GetPullRequest(); //! TODO: params
+	RepoInfo? GetRepo();			   //! TODO: params
 
-	IEnumerable<Gist>ListGists();				//! TODO: params + filter params
-	IEnumerable<Issue>ListIssues();				//! TODO: params + filter params
-	IEnumerable<PullRequest>ListPullRequests(); //! TODO: params + filter params
-	IEnumerable<Repo>ListRepos();				//! TODO: params + filter params
+	IEnumerable<GistInfo>ListGists();				//! TODO: params + filter params
+	IEnumerable<IssueInfo>ListIssues();				//! TODO: params + filter params
+	IEnumerable<PullRequestInfo>ListPullRequests(); //! TODO: params + filter params
+	IEnumerable<RepoInfo>ListRepos();				//! TODO: params + filter params
 }
 }

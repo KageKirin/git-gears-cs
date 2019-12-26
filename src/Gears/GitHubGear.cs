@@ -16,15 +16,24 @@ public class GitHubGear : CommonGear, IGear
 
 	public void Test()
 	{
-		var gqlRequest = new GraphQLRequest{Query = @" query($_owner
-															 : String !, $_name
-															 : String !){repository(owner
-																					: $_owner, name
-																					: $_name){id, name, url}} ",
-											Variables = new {
-												_owner = RepoUrl.Owner,
-												_name = RepoUrl.RepoName,
-											}};
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query($_owner: String!, $_name: String!)
+			{
+				repository(owner: $_owner, name: $_name)
+				{
+					id,
+					name,
+					url
+				}
+			} ",
+			Variables = new {
+				_owner = RepoUrl.Owner,
+				_name = RepoUrl.RepoName,
+			}
+		};
+		// clang-format on
 		Console.WriteLine($"{gqlRequest.Query}");
 		Console.WriteLine($"{gqlRequest.Variables}");
 		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
@@ -38,29 +47,43 @@ public class GitHubGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public Issue GetIssue()
+	public IssueInfo? GetIssue()
 	{
-		return new Issue();
+		return new IssueInfo();
 	}
 
-	public IEnumerable<Issue>ListIssues()
+	public IEnumerable<IssueInfo>ListIssues()
 	{
-		var gqlRequest =
-			new GraphQLRequest{Query = @" query($_owner
-												: String !, $_name
-												: String !, $_count
-												: Int !){repository(owner
-																	: $_owner, name
-																	: $_name){id, name, url,
-																			  issues(first
-																					 : $_count){nodes{
-																				  number,
-																				  bodyText,
-																				  state,
-																				  title,
-																				  url,
-																			  }}}} ",
-							   Variables = new {_owner = RepoUrl.Owner, _name = RepoUrl.RepoName, _count = 100}};
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query($_owner: String!, $_name: String!, $_count: Int !)
+			{
+				repository(owner: $_owner, name: $_name)
+				{
+					id,
+					name,
+					url,
+					issues(first: $_count)
+					{
+						nodes
+						{
+							number,
+							bodyText,
+							state,
+							title,
+							url,
+						}
+					}
+				}
+			} ",
+			Variables = new {
+				_owner = RepoUrl.Owner,
+				_name = RepoUrl.RepoName,
+				_count = 100
+			}
+		};
+		// clang-format on
 		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
 		if (gqlResponse.Data != null)
 		{
@@ -68,20 +91,20 @@ public class GitHubGear : CommonGear, IGear
 
 			if (gqlResponse.Data.repository.issues.nodes != null)
 			{
-				var list = new List<Issue>();
+				var list = new List<IssueInfo>();
 				foreach(var i in gqlResponse.Data.repository.issues.nodes)
 				{
-					list.Add(ToIssue(i));
+					list.Add(ToIssueInfo(i));
 				}
-				return list as IEnumerable<Issue>;
+				return list as IEnumerable<IssueInfo>;
 			}
 		}
 		return null;
 	}
 
-	Issue ToIssue(dynamic gqlData)
+	IssueInfo ToIssueInfo(dynamic gqlData)
 	{
-		var issue = new Issue();
+		var issue = new IssueInfo();
 		issue.Number = gqlData.number;
 		// TODO: state
 		issue.Url = gqlData.url;
@@ -92,89 +115,112 @@ public class GitHubGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public PullRequest GetPullRequest()
+	public PullRequestInfo? GetPullRequest()
 	{
-		var gqlRequest = new GraphQLRequest{Query = @" query($_owner
-															 : String !, $_name
-															 : String !, $_branch
-															 : String !){repository(owner
-																					: $_owner, name
-																					: $_name){
-												id, name, url,
-												pullRequests(headRefName
-															 : $_branch, orderBy
-															 : {direction : DESC, field : UPDATED_AT}, first : 1){nodes{
-													baseRefName,
-													headRefName,
-													number,
-													bodyText,
-													permalink,
-													resourcePath,
-													state,
-													title,
-													url,
-												}}}} ",
-											Variables = new {
-												_owner = RepoUrl.Owner, _name = RepoUrl.RepoName,
-												_branch = "getlist-impl", // TODO
-											}};
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query($_owner: String!, $_name: String!, $_branch: String!)
+			{
+				repository(owner: $_owner, name: $_name)
+				{
+					id,
+					name,
+					url,
+					pullRequests(headRefName: $_branch, orderBy: {direction : DESC, field : UPDATED_AT}, first : 1)
+					{
+						nodes
+						{
+							baseRefName,
+							headRefName,
+							number,
+							bodyText,
+							permalink,
+							resourcePath,
+							state,
+							title,
+							url,
+						}
+					}
+				}
+			} ",
+			Variables = new {
+				_owner = RepoUrl.Owner,
+				_name = RepoUrl.RepoName,
+				_branch = "getlist-impl", // TODO
+			}
+		};
+		// clang-format on
 		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
 			if (gqlResponse.Data.repository.pullRequests.nodes != null)
 			{
-				return ToPullRequest(gqlResponse.Data.repository.pullRequests.nodes[0]);
+				return ToPullRequestInfo(gqlResponse.Data.repository.pullRequests.nodes[0]);
 			}
 		}
 		return null;
 	}
 
-	public IEnumerable<PullRequest>ListPullRequests()
+	public IEnumerable<PullRequestInfo>ListPullRequests()
 	{
+		// clang-format off
 		var gqlRequest = new GraphQLRequest{
-			Query = @" query($_owner
-							 : String !, $_name
-							 : String !, $_count
-							 : Int !){repository(owner
-												 : $_owner, name
-												 : $_name){id, name, url,
-														   pullRequests(orderBy
-																		: {direction : DESC, field : UPDATED_AT}, first
-																		: $_count){nodes{
-															   baseRefName,
-															   headRefName,
-															   number,
-															   bodyText,
-															   permalink,
-															   resourcePath,
-															   state,
-															   title,
-															   url,
-														   }}}} ",
-			Variables = new {_owner = RepoUrl.Owner, _name = RepoUrl.RepoName, _count = 100}};
+			Query = @"
+			query($_owner: String!, $_name: String!, $_count: Int !)
+			{
+				repository(owner: $_owner, name: $_name)
+				{
+					id,
+					name,
+					url,
+					pullRequests(orderBy: {direction : DESC, field : UPDATED_AT}, first: $_count)
+					{
+						nodes
+						{
+							baseRefName,
+							headRefName,
+							number,
+							bodyText,
+							permalink,
+							resourcePath,
+							state,
+							title,
+							url,
+						}
+					}
+				}
+			} ",
+			Variables = new {
+				_owner = RepoUrl.Owner,
+				_name = RepoUrl.RepoName,
+				_count = 100
+			}
+		};
+		// clang-format on
 		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
-			var list = new List<PullRequest>();
+			var list = new List<PullRequestInfo>();
 
 			if (gqlResponse.Data.repository.pullRequests.nodes != null)
 			{
 				foreach(var n in gqlResponse.Data.repository.pullRequests.nodes)
 				{
-					list.Add(ToPullRequest(n));
+					list.Add(ToPullRequestInfo(n));
 				}
 			}
 
-			return list as IEnumerable<PullRequest>;
+			return list as IEnumerable<PullRequestInfo>;
 		}
 		return null;
 	}
 
-	private PullRequest ToPullRequest(dynamic gqlData)
+	private PullRequestInfo? ToPullRequestInfo(dynamic gqlData)
 	{
-		var pr = new PullRequest();
+		var pr = new PullRequestInfo();
 		pr.Url = gqlData.url;
 		pr.Number = gqlData.number;
 		pr.BaseRef = gqlData.baseRefName;
@@ -190,40 +236,45 @@ public class GitHubGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public Repo GetRepo()
+	public RepoInfo? GetRepo()
 	{
-		var gqlRequest = new GraphQLRequest{Query = @" query($_owner
-															 : String !, $_name
-															 : String !){repository(owner
-																					: $_owner, name
-																					: $_name){
-												id,
-												url,
-												name,
-												description,
-												nameWithOwner,
-											}} ",
-											Variables = new {
-												_owner = RepoUrl.Owner,
-												_name = RepoUrl.RepoName,
-											}};
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query($_owner: String!, $_name: String!)
+			{
+				repository(owner: $_owner, name: $_name)
+				{
+					id,
+					url,
+					name,
+					description,
+					nameWithOwner,
+				}
+			} ",
+			Variables = new {
+				_owner = RepoUrl.Owner,
+				_name = RepoUrl.RepoName,
+			}
+		};
+		// clang-format on
 		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
-			return ToRepo(gqlResponse.Data);
+			return ToRepoInfo(gqlResponse.Data);
 		}
 		return null;
 	}
 
-	public IEnumerable<Repo>ListRepos()
+	public IEnumerable<RepoInfo>ListRepos()
 	{
-		return new List<Repo>() as IEnumerable<Repo>;
+		return new List<RepoInfo>() as IEnumerable<RepoInfo>;
 	}
 
-	private Repo ToRepo(dynamic gqlData)
+	private RepoInfo ToRepoInfo(dynamic gqlData)
 	{
-		var repo = new Repo();
+		var repo = new RepoInfo();
 		repo.Id = gqlData.repository.id;
 		repo.Url = gqlData.repository.url;
 		repo.Name = gqlData.repository.name;
@@ -234,14 +285,14 @@ public class GitHubGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public Gist GetGist()
+	public GistInfo? GetGist()
 	{
-		return new Gist();
+		return new GistInfo();
 	}
 
-	public IEnumerable<Gist>ListGists()
+	public IEnumerable<GistInfo>ListGists()
 	{
-		return new List<Gist>() as IEnumerable<Gist>;
+		return new List<GistInfo>() as IEnumerable<GistInfo>;
 	}
 
 	///////////////////////////////////////////////////////////////////////////
