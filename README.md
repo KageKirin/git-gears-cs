@@ -95,26 +95,26 @@ and allows to have different settings per project.
 
 In general, this looks like that:
 
-```
+```ini
 [gears "my.host"]
-	token = <your access token>
-	api = <github|gitlab>
-	url = https://my.host/api/graphql
+token = <your access token>
+api = <github|gitlab>
+url = https://my.host/api/graphql
 ```
 
 And a more concrete use-case are the following settings:
 
-```
+```ini
 [gears "github.com"]
-	token = <your github access token>
-	api = github
-	url = https://api.github.com/graphql
+token = <your github access token>
+api = github
+url = https://api.github.com/graphql
 [gears "github.enterprise.org"]
-	token = <your github enterprise access token>
-	api = github
-	url = https://github.enterprise.org/api/graphql
+token = <your github enterprise access token>
+api = github
+url = https://github.enterprise.org/api/graphql
 [gears "gitlab.com"]
-	token = <your gitlab access token>
-	api = gitlab
-	url = https://gitlab.com/api/graphql
+token = <your gitlab access token>
+api = gitlab
+url = https://gitlab.com/api/graphql
 ```
