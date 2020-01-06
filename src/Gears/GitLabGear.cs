@@ -145,12 +145,117 @@ public class GitLabGear : CommonGear, IGear
 
 	public PullRequestInfo? GetPullRequest(string branch)
 	{
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query ($_fullPath: ID!, $_branch: String!)
+			{
+				project(fullPath: $_fullPath)
+				{
+					id,
+					name,
+					webUrl,
+					mergeRequests(filter:{targetBranch: $_branch})
+					{
+						nodes
+						{
+							id,
+							targetBranch,
+							sourceBranch,
+							iid,
+							description,
+							mergeStatus,
+							title,
+							webUrl,
+						}
+					}
+				}
+			}",
+			Variables = new {
+				_fullPath = $"{RepoUrl.Owner}/{RepoUrl.RepoName}",
+				_branch = branch,
+			}
+		};
+		// clang-format on
+		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		if (gqlResponse.Data != null)
+		{
+			Console.WriteLine($"{gqlResponse.Data.ToString()}");
+			if (gqlResponse.Data.project.mergeRequests.nodes != null)
+			{
+				return ToPullRequestInfo(gqlResponse.Data.project.mergeRequests.nodes[0]);
+			}
+		}
 		return null;
 	}
 
 	public IEnumerable<PullRequestInfo>ListPullRequests()
 	{
-		return new List<PullRequestInfo>() as IEnumerable<PullRequestInfo>;
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query ($_fullPath: ID!, $_count: Int!)
+			{
+				project(fullPath: $_fullPath)
+				{
+					id,
+					name,
+					webUrl,
+					mergeRequests(first: $_count)
+					{
+						nodes
+						{
+							id,
+							targetBranch,
+							sourceBranch,
+							iid,
+							description,
+							mergeStatus,
+							title,
+							webUrl,
+						}
+					}
+				}
+			}",
+			Variables = new {
+				_fullPath = $"{RepoUrl.Owner}/{RepoUrl.RepoName}",
+				_count = 100
+			}
+		};
+		// clang-format on
+		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		if (gqlResponse.Data != null)
+		{
+			Console.WriteLine($"{gqlResponse.Data.ToString()}");
+			var list = new List<PullRequestInfo>();
+
+			if (gqlResponse.Data.project.mergeRequests.nodes != null)
+			{
+				foreach(var n in gqlResponse.Data.project.mergeRequests.nodes)
+				{
+					list.Add(ToPullRequestInfo(n));
+				}
+			}
+
+			return list as IEnumerable<PullRequestInfo>;
+		}
+		return null;
+	}
+
+	private PullRequestInfo ToPullRequestInfo(dynamic gqlData)
+	{
+		var pr = new PullRequestInfo();
+		pr.Url = gqlData.webUrl;
+		pr.Number = gqlData.iid;
+		pr.BaseRef = gqlData.targetBranch;
+		pr.HeadRef = gqlData.sourceBranch;
+		pr.Permalink = gqlData.webUrl;
+		pr.ResourcePath = gqlData.id;
+		// pr.State = gqlData.mergeStatus; //TODO: Enum.Parse
+		pr.Title = gqlData.title;
+		pr.Body = gqlData.description;
+
+		return pr;
 	}
 
 	///////////////////////////////////////////////////////////////////////////
