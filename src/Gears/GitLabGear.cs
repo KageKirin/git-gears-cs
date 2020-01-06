@@ -165,12 +165,105 @@ public class GitLabGear : CommonGear, IGear
 
 	public GistInfo? GetGist(string name)
 	{
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query($_gid: ID!)
+			{
+				currentUser
+				{
+					snippets(ids: [$_gid])
+					{
+						nodes
+						{
+							id,
+							title,
+							description,
+							createdAt,
+							updatedAt,
+							fileName,
+							content,
+							webUrl,
+						}
+					}
+				}
+			}",
+			Variables = new {
+				//_fullPath = $"{RepoUrl.Owner}/{RepoUrl.RepoName}",
+				_gid = name
+			}
+		};
+		// clang-format on
+		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		Console.WriteLine($"{gqlResponse.Data != null}");
+		if (gqlResponse.Data != null)
+		{
+			Console.WriteLine($"{gqlResponse.Data.ToString()}");
+			return ToGistInfo(gqlResponse.Data["currentUser"].snippets.nodes[0]);
+		}
 		return null;
 	}
 
 	public IEnumerable<GistInfo>ListGists()
 	{
-		return new List<GistInfo>() as IEnumerable<GistInfo>;
+		// TODO: count first, then query while iterating to get full count
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query($_count: Int!)
+			{
+				currentUser
+				{
+					snippets(first: $_count)
+					{
+						nodes
+						{
+							id,
+							title,
+							description,
+							createdAt,
+							updatedAt,
+							fileName,
+							content,
+							webUrl,
+						}
+					}
+				}
+			}",
+			Variables = new {
+				//_owner = RepoUrl.Owner,
+				_count = 100,
+			}
+		};
+		// clang-format on
+		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		if (gqlResponse.Data != null)
+		{
+			Console.WriteLine($"{gqlResponse.Data.ToString()}");
+			var list = new List<GistInfo>();
+
+			if (gqlResponse.Data["currentUser"].snippets.nodes != null)
+			{
+				foreach(var n in gqlResponse.Data["currentUser"].snippets.nodes)
+				{
+					list.Add(ToGistInfo(n));
+				}
+			}
+
+			return list as IEnumerable<GistInfo>;
+		}
+		return null;
+	}
+
+	private GistInfo ToGistInfo(dynamic gqlData)
+	{
+		var gist = new GistInfo();
+		gist.Id = gqlData.id;
+		gist.Name = gqlData.fileName;
+		gist.Description = gqlData.description;
+		gist.CreatedAt = gqlData.createdAt;
+		gist.PushedAt = gqlData.updatedAt;
+		return gist;
 	}
 
 	///////////////////////////////////////////////////////////////////////////
