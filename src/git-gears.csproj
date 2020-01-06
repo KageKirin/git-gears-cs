@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.6.0" />
     <PackageReference Include="Flurl" Version="2.8.2" />
+    <PackageReference Include="Flurl.Http" Version="2.4.2" />
     <PackageReference Include="GraphQL.Client" Version="1.0.3" />
     <PackageReference Include="libgit2sharp" Version="0.26.2" />
     <PackageReference Include="graphql" Version="2.4.0" />
