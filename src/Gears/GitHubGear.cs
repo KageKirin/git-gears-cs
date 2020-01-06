@@ -249,7 +249,7 @@ public class GitHubGear : CommonGear, IGear
 		return null;
 	}
 
-	private PullRequestInfo? ToPullRequestInfo(dynamic gqlData)
+	private PullRequestInfo ToPullRequestInfo(dynamic gqlData)
 	{
 		var pr = new PullRequestInfo();
 		pr.Url = gqlData.url;
