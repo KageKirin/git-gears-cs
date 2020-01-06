@@ -45,12 +45,100 @@ public class GitLabGear : CommonGear, IGear
 
 	public IssueInfo? GetIssue(int number)
 	{
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query ($_fullPath: ID!, $_iid: String!)
+			{
+				project(fullPath: $_fullPath)
+				{
+					id,
+					name,
+					webUrl,
+					issue(iid: $_iid)
+					{
+						iid,
+						title,
+						description,
+						webUrl,
+					}
+				}
+			}",
+			Variables = new {
+				_fullPath = $"{RepoUrl.Owner}/{RepoUrl.RepoName}",
+				_iid = $"{number}",
+			}
+		};
+		// clang-format on
+		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		if (gqlResponse.Data != null)
+		{
+			Console.WriteLine($"{gqlResponse.Data.ToString()}");
+			if (gqlResponse.Data.project.issue != null)
+			{
+				return ToIssueInfo(gqlResponse.Data.project.issue);
+			}
+		}
 		return null;
 	}
 
 	public IEnumerable<IssueInfo>ListIssues()
 	{
-		return new List<IssueInfo>() as IEnumerable<IssueInfo>;
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query ($_fullPath: ID!, $_count: Int!)
+			{
+				project(fullPath: $_fullPath)
+				{
+					id,
+					name,
+					webUrl,
+					issues(first: $_count)
+					{
+						nodes
+						{
+							iid,
+							title,
+							description,
+							webUrl,
+						}
+					}
+				}
+			}",
+			Variables = new {
+				_fullPath = $"{RepoUrl.Owner}/{RepoUrl.RepoName}",
+				_count = 100
+			}
+		};
+		// clang-format on
+		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		if (gqlResponse.Data != null)
+		{
+			Console.WriteLine($"{gqlResponse.Data.ToString()}");
+
+			if (gqlResponse.Data.project.issues.nodes != null)
+			{
+				var list = new List<IssueInfo>();
+				foreach(var i in gqlResponse.Data.project.issues.nodes)
+				{
+					list.Add(ToIssueInfo(i));
+				}
+				return list as IEnumerable<IssueInfo>;
+			}
+		}
+		return null;
+	}
+
+	IssueInfo ToIssueInfo(dynamic gqlData)
+	{
+		var issue = new IssueInfo();
+		issue.Number = gqlData.iid;
+		// TODO: state
+		issue.Url = gqlData.webUrl;
+		issue.Title = gqlData.title;
+		issue.Body = gqlData.description;
+		return issue;
 	}
 
 	///////////////////////////////////////////////////////////////////////////
