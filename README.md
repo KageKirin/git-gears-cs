@@ -18,13 +18,21 @@ So far, git-gears uses:
 - GraphQL via [GraphQL.Client](https://github.com/graphql-dotnet/graphql-client) for Service interfacing
 - [CommandLineParser](https://github.com/commandlineparser/commandline) for obvious reasons.
 
-### GraphQL
+### GraphQL and REST
 
 Since both [GitHub](https://developer.github.com/v4/) and
 [GitLab](https://docs.gitlab.com/ee/api/graphql/index.html)
 expose a GraphQL interface,
 git-gears uses the latter, instead of multiplying the dependencies on
 hosting service specific libraries.
+
+However, at the time of writing this,
+not all functionality exposed via the respective GraphQL APIs
+seems to be correctly implemented.
+To bridge this gap, git-gears falls back on the REST API.
+
+In the long run, this will also allow git-gears to interface
+with other git hosting services that expose only a REST API.
 
 ## Name
 
@@ -40,6 +48,8 @@ in a smooth mechanical system.
 - git integration with libgit2 works, config can be read.
 - GitHub proof-of-concept GraphQL connection works
 - GitLab proof-of-concept GraphQL connection works
+- GitHub `get-` and `list-` actions work, but only on the enterprise instance I use for testing.
+- GitLab `get-` and `list-` actions except `pullrequests` work, but slightly different from their GitHub counterparts.
 
 ## Planned features
 
