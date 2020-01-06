@@ -14,6 +14,7 @@
     <PackageReference Include="GraphQL.Client" Version="1.0.3" />
     <PackageReference Include="libgit2sharp" Version="0.26.2" />
     <PackageReference Include="graphql" Version="2.4.0" />
+    <PackageReference Include="Octokit" Version="0.36.0" />
     <PackageReference Include="restsharp" Version="106.6.10" />
   </ItemGroup>
 
