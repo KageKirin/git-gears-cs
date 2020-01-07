@@ -2,9 +2,14 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using GraphQL.Client;
 using GraphQL.Common.Request;
 using GraphQL.Common.Response;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Flurl;
+using Flurl.Http;
 
 namespace git_gears
 {
@@ -177,16 +182,52 @@ public class GitLabGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
+		string project_id = null;
 		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
+			project_id = gqlResponse.Data.project.id;
 			if (gqlResponse.Data.project.mergeRequests.nodes != null
 			&&  gqlResponse.Data.project.mergeRequests.nodes.Count > 0)
 			{
 				return ToPullRequestInfo(gqlResponse.Data.project.mergeRequests.nodes[0]);
 			}
 		}
+
+		// workaround
+		if (project_id == null)
+		{
+			var repo = GetRepo();
+			if (repo.HasValue)
+			{
+				project_id = repo.Value.Id;
+			}
+		}
+
+		project_id = Regex.Split(project_id, @"gid://gitlab/Project/")[1];
+		Console.WriteLine($"project_id: {project_id}");
+
+		var rstResponse = JArray.Parse(
+			RestEndpoint
+				.WithClient(FlurlClient)
+				.AppendPathSegments("projects", project_id, "merge_requests")
+				.SetQueryParams(new {
+					source_branch = branch,
+					max_results = 1,
+					order_by = "updated_at",
+					sort = "desc",
+				})
+				.GetStringAsync()
+				.Result);
+
+		Console.WriteLine($"{rstResponse}");
+		if (rstResponse != null
+		&&  rstResponse.Count > 0)
+		{
+			return ToPullRequestInfo(rstResponse[0]);
+		}
+
 		return null;
 	}
 
@@ -224,33 +265,71 @@ public class GitLabGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
+		string project_id = null;
+		var list = new List<PullRequestInfo>();
 		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
-			var list = new List<PullRequestInfo>();
-
-			if (gqlResponse.Data.project.mergeRequests.nodes != null)
+			project_id = gqlResponse.Data.project.id;
+			if (gqlResponse.Data.project.mergeRequests.nodes != null
+			&&  gqlResponse.Data.project.mergeRequests.nodes.Count > 0)
 			{
 				foreach(var n in gqlResponse.Data.project.mergeRequests.nodes)
 				{
 					list.Add(ToPullRequestInfo(n));
 				}
+				return list as IEnumerable<PullRequestInfo>;
 			}
+		}
 
+		// workaround
+		if (project_id == null)
+		{
+			var repo = GetRepo();
+			if (repo.HasValue)
+			{
+				project_id = repo.Value.Id;
+			}
+		}
+
+		project_id = Regex.Split(project_id, @"gid://gitlab/Project/")[1];
+		Console.WriteLine($"project_id: {project_id}");
+
+		var rstResponse = JArray.Parse(
+			RestEndpoint
+				.WithClient(FlurlClient)
+				.AppendPathSegments("projects", project_id, "merge_requests")
+				.SetQueryParams(new {
+					max_results = 100,
+					order_by = "updated_at",
+					sort = "desc",
+				})
+				.GetStringAsync()
+				.Result);
+			
+		Console.WriteLine($"{rstResponse}");
+		if (rstResponse != null
+		&&  rstResponse.Count > 0)
+		{
+			foreach(var n in rstResponse)
+			{
+				list.Add(ToPullRequestInfo(n));
+			}
 			return list as IEnumerable<PullRequestInfo>;
 		}
+
 		return null;
 	}
 
 	private PullRequestInfo ToPullRequestInfo(dynamic gqlData)
 	{
 		var pr = new PullRequestInfo();
-		pr.Url = gqlData.webUrl;
+		pr.Url = gqlData.webUrl ?? gqlData.web_url;
 		pr.Number = gqlData.iid;
-		pr.BaseRef = gqlData.targetBranch;
-		pr.HeadRef = gqlData.sourceBranch;
-		pr.Permalink = gqlData.webUrl;
+		pr.BaseRef = gqlData.targetBranch ?? gqlData.target_branch;
+		pr.HeadRef = gqlData.sourceBranch ?? gqlData.source_branch;
+		pr.Permalink = gqlData.webUrl ?? gqlData.web_url;
 		pr.ResourcePath = gqlData.id;
 		// pr.State = gqlData.mergeStatus; //TODO: Enum.Parse
 		pr.Title = gqlData.title;
