@@ -12,13 +12,20 @@ public abstract class CommonGear
 	public CommonGear(string remote)
 	{
 		Endpoint = GitUtils.GetGearsEndpointUrl(remote);
+		RestEndpoint = GitUtils.GetGearsRestEndpointUrl(remote);
 		Token = GitUtils.GetGearsAuthBearerToken(remote);
 		RepoUrl = GitUtils.GetRemoteUrl(remote);
+
 		Client = new GraphQLClient(Endpoint);
 		Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
 	}
 
 	protected string Endpoint
+	{
+		get;
+	}
+
+	protected string RestEndpoint
 	{
 		get;
 	}
