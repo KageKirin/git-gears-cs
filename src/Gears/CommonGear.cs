@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 
 using GraphQL.Client;
+using Flurl.Http;
 
 namespace git_gears
 {
@@ -20,6 +21,10 @@ public abstract class CommonGear
 		GqlClient = new GraphQLClient(Endpoint);
 		GqlClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
 		GqlClient.DefaultRequestHeaders.Add("User-Agent", UserAgent);
+
+		FlurlClient = new FlurlClient(RestEndpoint);
+		FlurlClient.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+		FlurlClient.HttpClient.DefaultRequestHeaders.Add("User-Agent", UserAgent);
 	}
 
 	protected string Endpoint
@@ -43,6 +48,11 @@ public abstract class CommonGear
 	}
 
 	protected GraphQLClient GqlClient
+	{
+		get;
+	}
+
+	protected FlurlClient FlurlClient
 	{
 		get;
 	}
