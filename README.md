@@ -14,9 +14,10 @@ and (ulteriorly) compiled down to a native executable.
 
 So far, git-gears uses:
 
+- [CommandLineParser](https://github.com/commandlineparser/commandline)
 - [libgit2sharp](https://github.com/libgit2/libgit2sharp) for Git integration
-- GraphQL via [GraphQL.Client](https://github.com/graphql-dotnet/graphql-client) for Service interfacing
-- [CommandLineParser](https://github.com/commandlineparser/commandline) for obvious reasons.
+- [GraphQL.Client](https://github.com/graphql-dotnet/graphql-client) for GraphQL service interfacing
+- [Flurl](https://flurl.dev) for REST service interfacing
 
 ### GraphQL and REST
 
