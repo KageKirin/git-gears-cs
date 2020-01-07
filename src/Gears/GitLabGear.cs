@@ -181,7 +181,8 @@ public class GitLabGear : CommonGear, IGear
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
-			if (gqlResponse.Data.project.mergeRequests.nodes != null)
+			if (gqlResponse.Data.project.mergeRequests.nodes != null
+			&&  gqlResponse.Data.project.mergeRequests.nodes.Count > 0)
 			{
 				return ToPullRequestInfo(gqlResponse.Data.project.mergeRequests.nodes[0]);
 			}
