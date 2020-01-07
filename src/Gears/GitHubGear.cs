@@ -24,6 +24,10 @@ public class GitHubGear : CommonGear, IGear
 		var daltest = client.user.Get().Result;
 		Console.WriteLine($"dal: {daltest}");
 
+		// http client test
+		var httptest = HttpClient.GetStringAsync(new Uri(RestEndpoint + "/user")).Result;
+		Console.WriteLine($"httpclient {httptest}");
+
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
 			Query = @"
