@@ -7,6 +7,10 @@ using GraphQL.Common.Request;
 using GraphQL.Common.Response;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
+using Flurl;
+using Flurl.Http;
+
 namespace git_gears
 {
 public class GitHubGear : CommonGear, IGear
@@ -29,6 +33,23 @@ public class GitHubGear : CommonGear, IGear
 		// http client test
 		var httptest = JObject.Parse(HttpClient.GetStringAsync(RestEndpoint.AppendPathSegment("user")).Result);
 		Console.WriteLine($"httpclient {httptest}");
+
+		//flurl test
+		var flurltest = JObject.Parse(FlurlClient
+			.Request("user")
+			.GetStringAsync()
+			.Result);
+		Console.WriteLine($"flurl {flurltest}");
+
+		flurltest = JObject.Parse(
+			RestEndpoint
+				.WithClient(FlurlClient)
+				.AppendPathSegment("user")
+				.GetStringAsync()
+				.Result);
+		Console.WriteLine($"flurl2 {flurltest}");
+
+
 
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
