@@ -14,6 +14,7 @@ public abstract class CommonGear
 		Endpoint = GitUtils.GetGearsEndpointUrl(remote);
 		RestEndpoint = GitUtils.GetGearsRestEndpointUrl(remote);
 		Token = GitUtils.GetGearsAuthBearerToken(remote);
+		UserAgent = $"git-gears/1.0.0 {GitUtils.GetConfigEntry("user.name")}";
 		RepoUrl = GitUtils.GetRemoteUrl(remote);
 
 		Client = new GraphQLClient(Endpoint);
@@ -27,6 +28,11 @@ public abstract class CommonGear
 	}
 
 	protected string RestEndpoint
+	{
+		get;
+	}
+
+	protected string UserAgent
 	{
 		get;
 	}
