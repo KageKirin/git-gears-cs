@@ -143,6 +143,25 @@ class GitUtils
 	}
 
 	/// <summary>
+	/// Retrieves the git-config 'gears' REST API Endpoint root URL for the given remote
+	/// Token must be set as follows:
+	/// ```
+	/// [gears "host.name"]
+	/// 	rest = https://service.com/api/v3
+	/// ```
+	///
+	/// Common endpoints are:
+	/// https://api.github.com/v3 for public GitHub
+	/// https://host.name/api/v3 for corporate GitHub Enterprise
+	/// https://gitlab.com/api/v4 for public GitLab
+	/// </summary>
+	/// <returns>value of key or null</returns>
+	public static string GetGearsRestEndpointUrl(string remoteName)
+	{
+		return GetGearsConfigEntry("rest", remoteName);
+	}
+
+	/// <summary>
 	/// Defines a type for Gears API
 	/// Currently, only GitHub and GitLab are defined and implemented
 	/// </summary>
