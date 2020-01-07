@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 
 using GraphQL.Client;
 using DalSoft.RestClient;
+using Flurl.Http;
 
 namespace git_gears
 {
@@ -33,6 +34,10 @@ public abstract class CommonGear
 			}
 		);
 		RestClient.Authorization(AuthenticationSchemes.Bearer, $"bearer {Token}");
+
+		FlurlClient = new FlurlClient(RestEndpoint);
+		FlurlClient.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+		FlurlClient.HttpClient.DefaultRequestHeaders.Add("User-Agent", UserAgent);
 	}
 
 	protected string Endpoint
@@ -66,6 +71,11 @@ public abstract class CommonGear
 	}
 
 	protected RestClient RestClient
+	{
+		get;
+	}
+
+	protected FlurlClient FlurlClient
 	{
 		get;
 	}
