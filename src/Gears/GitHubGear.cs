@@ -13,6 +13,7 @@ public class GitHubGear : CommonGear, IGear
 	public GitHubGear(string remote) : base(remote)
 	{
 		GqlClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v4+json");
+		FlurlClient.HttpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
 	}
 
 	public void Test()
