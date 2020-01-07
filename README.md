@@ -18,6 +18,7 @@ So far, git-gears uses:
 - [libgit2sharp](https://github.com/libgit2/libgit2sharp) for Git integration
 - [GraphQL.Client](https://github.com/graphql-dotnet/graphql-client) for GraphQL service interfacing
 - [Flurl](https://flurl.dev) for REST service interfacing
+- [Newtonsoft Json.NET](https://www.newtonsoft.com/json) for JSON parsing
 
 ### GraphQL and REST
 
