@@ -32,7 +32,7 @@ public class GitLabGear : CommonGear, IGear
 		// clang-format on
 		Console.WriteLine($"{gqlRequest.Query}");
 		// Console.WriteLine($"{gqlRequest.Variables}");
-		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
 		Console.WriteLine($"{gqlResponse.Data != null}");
 
 		if (gqlResponse.Data != null)
@@ -70,7 +70,7 @@ public class GitLabGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -112,7 +112,7 @@ public class GitLabGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -177,7 +177,7 @@ public class GitLabGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -224,7 +224,7 @@ public class GitLabGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -284,7 +284,7 @@ public class GitLabGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
 		Console.WriteLine($"{gqlResponse.Data != null}");
 		if (gqlResponse.Data != null)
 		{
@@ -325,7 +325,7 @@ public class GitLabGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -388,7 +388,7 @@ public class GitLabGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
 		Console.WriteLine($"{gqlResponse.Data != null}");
 		if (gqlResponse.Data != null)
 		{
@@ -430,7 +430,7 @@ public class GitLabGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = Client.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");

@@ -17,9 +17,9 @@ public abstract class CommonGear
 		UserAgent = $"git-gears/1.0.0 {GitUtils.GetConfigEntry("user.name")}";
 		RepoUrl = GitUtils.GetRemoteUrl(remote);
 
-		Client = new GraphQLClient(Endpoint);
-		Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
-		Client.DefaultRequestHeaders.Add("User-Agent", $"git-gears/1.0.0 {GitUtils.GetConfigEntry("user.name")}");
+		GqlClient = new GraphQLClient(Endpoint);
+		GqlClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+		GqlClient.DefaultRequestHeaders.Add("User-Agent", UserAgent);
 	}
 
 	protected string Endpoint
@@ -42,7 +42,7 @@ public abstract class CommonGear
 		get;
 	}
 
-	protected GraphQLClient Client
+	protected GraphQLClient GqlClient
 	{
 		get;
 	}
