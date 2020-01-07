@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 
 using GraphQL.Client;
+using DalSoft.RestClient;
 
 namespace git_gears
 {
@@ -20,6 +21,14 @@ public abstract class CommonGear
 		GqlClient = new GraphQLClient(Endpoint);
 		GqlClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
 		GqlClient.DefaultRequestHeaders.Add("User-Agent", UserAgent);
+
+		RestClient = new RestClient(RestEndpoint,
+			new Headers {
+				{ "User-Agent", UserAgent },
+				{ "Authorization", $"bearer {Token}" },
+			}
+		);
+		RestClient.Authorization(AuthenticationSchemes.Bearer, $"bearer {Token}");
 	}
 
 	protected string Endpoint
@@ -43,6 +52,11 @@ public abstract class CommonGear
 	}
 
 	protected GraphQLClient GqlClient
+	{
+		get;
+	}
+
+	protected RestClient RestClient
 	{
 		get;
 	}
