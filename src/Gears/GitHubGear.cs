@@ -12,6 +12,7 @@ public class GitHubGear : CommonGear, IGear
 {
 	public GitHubGear(string remote) : base(remote)
 	{
+		HttpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
 		GqlClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v4+json");
 		RestClient.HttpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
 	}
