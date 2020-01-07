@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using GraphQL.Client;
 using GraphQL.Common.Request;
 using GraphQL.Common.Response;
-
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 namespace git_gears
 {
 public class GitHubGear : CommonGear, IGear
@@ -21,11 +22,11 @@ public class GitHubGear : CommonGear, IGear
 	{
 		// dal test
 		dynamic client = RestClient;
-		var daltest = client.user.Get().Result;
+		var daltest = JObject.Parse(client.user.Get().Result.ToString());
 		Console.WriteLine($"dal: {daltest}");
 
 		// http client test
-		var httptest = HttpClient.GetStringAsync(new Uri(RestEndpoint + "/user")).Result;
+		var httptest = JObject.Parse(HttpClient.GetStringAsync(RestEndpoint.AppendPathSegment("user")).Result);
 		Console.WriteLine($"httpclient {httptest}");
 
 		// clang-format off
