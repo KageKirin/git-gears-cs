@@ -19,6 +19,11 @@ public class GitHubGear : CommonGear, IGear
 
 	public void Test()
 	{
+		// dal test
+		dynamic client = RestClient;
+		var daltest = client.user.Get().Result;
+		Console.WriteLine($"dal: {daltest}");
+
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
 			Query = @"
