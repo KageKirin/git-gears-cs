@@ -18,6 +18,10 @@ public abstract class CommonGear
 		UserAgent = $"git-gears/1.0.0 {GitUtils.GetConfigEntry("user.name")}";
 		RepoUrl = GitUtils.GetRemoteUrl(remote);
 
+		HttpClient = new HttpClient();
+		HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+		HttpClient.DefaultRequestHeaders.Add("User-Agent", UserAgent);
+
 		GqlClient = new GraphQLClient(Endpoint);
 		GqlClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
 		GqlClient.DefaultRequestHeaders.Add("User-Agent", UserAgent);
@@ -47,6 +51,11 @@ public abstract class CommonGear
 	}
 
 	protected string Token
+	{
+		get;
+	}
+
+	protected HttpClient HttpClient
 	{
 		get;
 	}
