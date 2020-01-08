@@ -15,5 +15,7 @@ public interface IGear
 	IEnumerable<IssueInfo>ListIssues();				//! TODO: params + filter params
 	IEnumerable<PullRequestInfo>ListPullRequests(); //! TODO: params + filter params
 	IEnumerable<RepoInfo>ListRepos();				//! TODO: params + filter params
+
+	IssueInfo? CreateIssue(string title, string body); //! TODO: more params
 }
 }
