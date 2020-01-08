@@ -50,6 +50,19 @@ public class GitLabGear : CommonGear, IGear
 
 	public IssueInfo? CreateIssue(string title, string body)
 	{
+		var rstResponse = RestEndpoint
+				.WithClient(FlurlClient)
+				.AppendPathSegments("projects", GetRepoProjectId(), "issues")
+				.PostJsonAsync(new {
+					title = title,
+					description = body
+				})
+				.Result;
+		var rstResponseContent = JObject.Parse(rstResponse.Content.ReadAsStringAsync().Result);
+		if (rstResponseContent != null)
+		{
+			return ToIssueInfo(rstResponseContent);
+		}
 		return null;
 	}
 
@@ -145,7 +158,7 @@ public class GitLabGear : CommonGear, IGear
 		var issue = new IssueInfo();
 		issue.Number = gqlData.iid;
 		// TODO: state
-		issue.Url = gqlData.webUrl;
+		issue.Url = gqlData.webUrl ?? gqlData.web_url;
 		issue.Title = gqlData.title;
 		issue.Body = gqlData.description;
 		return issue;
