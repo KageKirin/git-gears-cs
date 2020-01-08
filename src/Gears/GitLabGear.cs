@@ -192,7 +192,7 @@ public class GitLabGear : CommonGear, IGear
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
-			project_id = gqlResponse.Data.project.id;
+			project_id = GetProjectIdFromGid(gqlResponse.Data.project.id);
 			if (gqlResponse.Data.project.mergeRequests.nodes != null
 			&&  gqlResponse.Data.project.mergeRequests.nodes.Count > 0)
 			{
@@ -201,18 +201,7 @@ public class GitLabGear : CommonGear, IGear
 		}
 
 		// workaround
-		if (project_id == null)
-		{
-			var repo = GetRepo();
-			if (repo.HasValue)
-			{
-				project_id = repo.Value.Id;
-			}
-		}
-
-		project_id = Regex.Split(project_id, @"gid://gitlab/Project/")[1];
-		Console.WriteLine($"project_id: {project_id}");
-
+		project_id = project_id ?? GetRepoProjectId();
 		var rstResponse = JArray.Parse(
 			RestEndpoint
 				.WithClient(FlurlClient)
@@ -276,7 +265,7 @@ public class GitLabGear : CommonGear, IGear
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
-			project_id = gqlResponse.Data.project.id;
+			project_id = GetProjectIdFromGid(gqlResponse.Data.project.id);
 			if (gqlResponse.Data.project.mergeRequests.nodes != null
 			&&  gqlResponse.Data.project.mergeRequests.nodes.Count > 0)
 			{
@@ -289,18 +278,7 @@ public class GitLabGear : CommonGear, IGear
 		}
 
 		// workaround
-		if (project_id == null)
-		{
-			var repo = GetRepo();
-			if (repo.HasValue)
-			{
-				project_id = repo.Value.Id;
-			}
-		}
-
-		project_id = Regex.Split(project_id, @"gid://gitlab/Project/")[1];
-		Console.WriteLine($"project_id: {project_id}");
-
+		project_id = project_id ?? GetRepoProjectId();
 		var rstResponse = JArray.Parse(
 			RestEndpoint
 				.WithClient(FlurlClient)
@@ -344,6 +322,22 @@ public class GitLabGear : CommonGear, IGear
 	}
 
 	///////////////////////////////////////////////////////////////////////////
+
+	private string GetProjectIdFromGid(string gid)
+	{
+		return Regex.Split(gid, @"gid://gitlab/Project/")[1];
+	}
+
+	private string GetRepoProjectId()
+	{
+		var repo = GetRepo();
+		if (repo.HasValue)
+		{
+			return GetProjectIdFromGid(repo.Value.Id);
+		}
+
+		return "";
+	}
 
 	public RepoInfo? GetRepo()
 	{
