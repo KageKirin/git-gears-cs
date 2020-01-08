@@ -46,6 +46,50 @@ public class GitHubGear : CommonGear, IGear
 
 	public IssueInfo? CreateIssue(string title, string body)
 	{
+		var repo = GetRepo();
+		if (repo.HasValue)
+		{
+			// clang-format off
+			var gqlRequest = new GraphQLRequest{
+				Query = @"
+				mutation($_mutationId: String!, $_repositoryId: ID!, $_title: String!, $_body: String!)
+				{
+					createIssue(input: {
+						clientMutationId: $_mutationId,
+						title: $_title,
+						body: $_body,
+						repositoryId: $_repositoryId,
+					})
+					{
+						clientMutationId,
+						issue
+						{
+							number,
+							bodyText,
+							state,
+							title,
+							url,
+						}
+					}
+				}",
+				Variables = new {
+					_mutationId = Guid.NewGuid().ToString(),
+					_repositoryId = repo.Value.Id,
+					_title = title,
+					_body = body,
+				}
+			};
+			// clang-format on
+			GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+			if (gqlResponse.Data != null)
+			{
+				Console.WriteLine($"{gqlResponse.Data.ToString()}");
+				if (gqlResponse.Data.createIssue.issue != null)
+				{
+					return ToIssueInfo(gqlResponse.Data.createIssue.issue);
+				}
+			}
+		}
 		return null;
 	}
 
@@ -70,7 +114,7 @@ public class GitHubGear : CommonGear, IGear
 						url,
 					}
 				}
-			} ",
+			}",
 			Variables = new {
 				_owner = RepoUrl.Owner,
 				_name = RepoUrl.RepoName,
@@ -114,7 +158,7 @@ public class GitHubGear : CommonGear, IGear
 						}
 					}
 				}
-			} ",
+			}",
 			Variables = new {
 				_owner = RepoUrl.Owner,
 				_name = RepoUrl.RepoName,
@@ -181,7 +225,7 @@ public class GitHubGear : CommonGear, IGear
 						}
 					}
 				}
-			} ",
+			}",
 			Variables = new {
 				_owner = RepoUrl.Owner,
 				_name = RepoUrl.RepoName,
@@ -230,7 +274,7 @@ public class GitHubGear : CommonGear, IGear
 						}
 					}
 				}
-			} ",
+			}",
 			Variables = new {
 				_owner = RepoUrl.Owner,
 				_name = RepoUrl.RepoName,
@@ -292,7 +336,7 @@ public class GitHubGear : CommonGear, IGear
 					createdAt,
 					pushedAt,
 				}
-			} ",
+			}",
 			Variables = new {
 				_owner = RepoUrl.Owner,
 				_name = RepoUrl.RepoName,
