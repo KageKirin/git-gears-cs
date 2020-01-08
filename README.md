@@ -125,3 +125,7 @@ api = gitlab
 url = https://gitlab.com/api/graphql
 rest = https://gitlab.com/api/v4
 ```
+
+## Technical considerations
+
+For more details on the technical considerations of this project, please read my [blog post](https://gist.github.com/KageKirin/719fa5c74affd90c21fa2d7d959dc9f3)
