@@ -48,6 +48,11 @@ public class GitLabGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
+	public IssueInfo? CreateIssue(string title, string body)
+	{
+		return null;
+	}
+
 	public IssueInfo? GetIssue(int number)
 	{
 		// clang-format off
