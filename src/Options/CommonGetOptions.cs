@@ -4,7 +4,7 @@ namespace git_gears
 {
 public abstract class CommonGetOptions : CommonOptions
 {
-	[Option("open", Required = false, HelpText = "Open in default browser.")]
+	[Option('o', "open", Required = false, HelpText = "Open in default browser.")]
 	public bool OpenInBrowser
 	{
 		get;
