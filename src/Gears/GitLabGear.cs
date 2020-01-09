@@ -166,6 +166,11 @@ public class GitLabGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
+	public PullRequestInfo? CreatePullRequest(CreatePullRequestParams p)
+	{
+		return null;
+	}
+
 	public PullRequestInfo? GetPullRequest(string branch)
 	{
 		// clang-format off
