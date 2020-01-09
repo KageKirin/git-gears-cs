@@ -385,6 +385,11 @@ public class GitHubGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
+	public RepoInfo? CreateRepo(CreateRepoParams p)
+	{
+		return null;
+	}
+
 	public RepoInfo? GetRepo()
 	{
 		// clang-format off

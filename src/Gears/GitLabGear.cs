@@ -379,6 +379,11 @@ public class GitLabGear : CommonGear, IGear
 		return "";
 	}
 
+	public RepoInfo? CreateRepo(CreateRepoParams p)
+	{
+		return null;
+	}
+
 	public RepoInfo? GetRepo()
 	{
 		// clang-format off
