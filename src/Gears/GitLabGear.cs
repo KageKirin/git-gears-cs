@@ -164,6 +164,20 @@ public class GitLabGear : CommonGear, IGear
 
 	public PullRequestInfo? CreatePullRequest(CreatePullRequestParams p)
 	{
+		var rstResponse = RestEndpoint.WithClient(FlurlClient)
+							  .AppendPathSegments("projects", GetRepoProjectId(), "merge_requests")
+							  .PostJsonAsync(new {
+								  source_branch = p.branch,		  //
+								  target_branch = p.targetBranch, //
+								  title = p.title,				  //
+								  description = p.body			  //
+							  })
+							  .Result;
+		var rstResponseContent = JObject.Parse(rstResponse.Content.ReadAsStringAsync().Result);
+		if (rstResponseContent != null)
+		{
+			return ToPullRequestInfo(rstResponseContent);
+		}
 		return null;
 	}
 
