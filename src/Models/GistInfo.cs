@@ -8,5 +8,6 @@ public struct GistInfo
 	public string Description;
 	public string CreatedAt;
 	public string PushedAt;
+	public string Url;
 }
 }
