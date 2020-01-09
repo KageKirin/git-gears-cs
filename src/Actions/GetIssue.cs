@@ -22,7 +22,7 @@ public class GetIssue
 			}
 			else
 			{
-				Console.WriteLine($"There is no issue to be found for {opts.Remote} #{opts.Number}");
+				Console.WriteLine($"There is no issue to be found for {opts.Remote} #{opts.Number}.");
 			}
 		}
 		return 0;

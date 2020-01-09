@@ -22,7 +22,7 @@ public class GetRepo
 			}
 			else
 			{
-				Console.WriteLine($"There is no repository to be found for {opts.Remote}");
+				Console.WriteLine($"There is no repository to be found for {opts.Remote}.");
 			}
 		}
 

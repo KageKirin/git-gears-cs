@@ -22,7 +22,7 @@ public class CreateIssue
 			}
 			else
 			{
-				Console.WriteLine($"Failed to create an issue on {opts.Remote}");
+				Console.WriteLine($"Failed to create an issue on {opts.Remote}.");
 			}
 		}
 		return 0;
