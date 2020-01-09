@@ -13,7 +13,7 @@ public class CreateIssue
 
 		if (gear != null)
 		{
-			IssueInfo? issue = gear.CreateIssue(opts.Title, opts.Body);
+			IssueInfo? issue = gear.CreateIssue(new CreateIssueParams{title = opts.Title, body = opts.Body});
 			if (issue.HasValue)
 			{
 				Console.WriteLine($"Created new issue on {opts.Remote}");
