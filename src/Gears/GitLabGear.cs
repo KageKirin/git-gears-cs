@@ -471,6 +471,11 @@ public class GitLabGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
+	public GistInfo? CreateGist(CreateGistParams p)
+	{
+		return null;
+	}
+
 	public GistInfo? GetGist(string name)
 	{
 		// clang-format off
