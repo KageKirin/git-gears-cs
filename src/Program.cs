@@ -13,6 +13,7 @@ class Program
 				CreateGistOptions,		  //
 				CreateIssueOptions,		  //
 				CreatePullRequestOptions, //
+				CreateRepoOptions,		  //
 				GetGistOptions,			  //
 				GetIssueOptions,		  //
 				GetPullRequestOptions,	  //
@@ -27,6 +28,7 @@ class Program
 				(CreateGistOptions opts) => CreateGist.Execute(opts),				//
 				(CreateIssueOptions opts) => CreateIssue.Execute(opts),				//
 				(CreatePullRequestOptions opts) => CreatePullRequest.Execute(opts), //
+				(CreateRepoOptions opts) => CreateRepo.Execute(opts),				//
 				(GetGistOptions opts) => GetGist.Execute(opts),						//
 				(GetIssueOptions opts) => GetIssue.Execute(opts),					//
 				(GetPullRequestOptions opts) => GetPullRequest.Execute(opts),		//
