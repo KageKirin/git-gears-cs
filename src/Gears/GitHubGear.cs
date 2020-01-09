@@ -242,8 +242,8 @@ public class GitHubGear : CommonGear, IGear
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
-			if (gqlResponse.Data.repository.pullRequests.nodes != null
-			&&  gqlResponse.Data.repository.pullRequests.nodes.Count > 0)
+			if (gqlResponse.Data.repository.pullRequests.nodes != null &&
+				gqlResponse.Data.repository.pullRequests.nodes.Count > 0)
 			{
 				return ToPullRequestInfo(gqlResponse.Data.repository.pullRequests.nodes[0]);
 			}
