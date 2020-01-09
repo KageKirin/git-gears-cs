@@ -10,6 +10,7 @@ class Program
 	{
 		return Parser.Default
 			.ParseArguments<			  //
+				CreateGistOptions,		  //
 				CreateIssueOptions,		  //
 				CreatePullRequestOptions, //
 				GetGistOptions,			  //
@@ -23,6 +24,7 @@ class Program
 				TestOptions				  //
 				>(args)
 			.MapResult(																//
+				(CreateGistOptions opts) => CreateGist.Execute(opts),				//
 				(CreateIssueOptions opts) => CreateIssue.Execute(opts),				//
 				(CreatePullRequestOptions opts) => CreatePullRequest.Execute(opts), //
 				(GetGistOptions opts) => GetGist.Execute(opts),						//
