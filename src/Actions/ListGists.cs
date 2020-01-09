@@ -16,7 +16,7 @@ public class ListGists
 			var gists = gear.ListGists();
 			foreach(var i in gists)
 			{
-				Console.WriteLine($"{i.Description} - {i.Name} - {i.Id}");
+				Console.WriteLine($"{i.Description} - {i.Name} - {i.Id} - {i.Url}");
 			}
 		}
 
