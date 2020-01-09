@@ -199,6 +199,63 @@ public class GitHubGear : CommonGear, IGear
 
 	public PullRequestInfo? CreatePullRequest(CreatePullRequestParams p)
 	{
+		var repo = GetRepo();
+		if (repo.HasValue)
+		{
+			// clang-format off
+			var gqlRequest = new GraphQLRequest{
+				Query = @"
+				mutation($_mutationId: String!,
+						 $_repositoryId: ID!,
+						 $_branch: String!
+						 $_targetBranch: String!,
+						 $_title: String!,
+						 $_body: String!)
+				{
+					createPullRequest(input: {
+						clientMutationId: $_mutationId,
+						repositoryId: $_repositoryId,
+						headRefName: $_branch,
+						baseRefName: $_targetBranch,
+						title: $_title,
+						body: $_body,
+					})
+					{
+						clientMutationId,
+						pullRequest
+						{
+							baseRefName,
+							headRefName,
+							number,
+							bodyText,
+							permalink,
+							resourcePath,
+							state,
+							title,
+							url,
+						}
+					}
+				}",
+				Variables = new {
+					_mutationId = Guid.NewGuid().ToString(),
+					_repositoryId = repo.Value.Id,
+					_branch = p.branch,
+					_targetBranch = p.targetBranch,
+					_title = p.title,
+					_body = p.body,
+				}
+			};
+			// clang-format on
+			GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+			if (gqlResponse.Data != null)
+			{
+				Console.WriteLine($"{gqlResponse.Data.ToString()}");
+				if (gqlResponse.Data.createPullRequest.pullRequest != null)
+				{
+					return ToPullRequestInfo(gqlResponse.Data.createPullRequest.pullRequest);
+				}
+			}
+		}
 		return null;
 	}
 
