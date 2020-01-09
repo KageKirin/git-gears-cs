@@ -21,7 +21,7 @@ public class GetGist
 			}
 			else
 			{
-				Console.WriteLine($"There is no gist to be found for {opts.Remote} {opts.Name}");
+				Console.WriteLine($"There is no gist named {opts.Name} to be found on {opts.Remote}.");
 			}
 		}
 		return 0;

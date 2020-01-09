@@ -25,7 +25,7 @@ public class GetPullRequest
 			}
 			else
 			{
-				Console.WriteLine($"There is no pullrequest to be found for {opts.Remote} {opts.Branch}");
+				Console.WriteLine($"There is no pullrequest to be found for {branch} on {opts.Remote}.");
 			}
 		}
 
