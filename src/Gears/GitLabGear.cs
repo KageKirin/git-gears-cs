@@ -567,10 +567,11 @@ public class GitLabGear : CommonGear, IGear
 	{
 		var gist = new GistInfo();
 		gist.Id = gqlData.id;
-		gist.Name = gqlData.fileName;
+		gist.Name = gqlData.fileName ?? gqlData.file_name;
+		gist.Url = gqlData.webUrl ?? gqlData.web_url;
 		gist.Description = gqlData.description;
-		gist.CreatedAt = gqlData.createdAt;
-		gist.PushedAt = gqlData.updatedAt;
+		gist.CreatedAt = gqlData.createdAt ?? gqlData.created_at;
+		gist.PushedAt = gqlData.updatedAt ?? gqlData.updated_at;
 		return gist;
 	}
 

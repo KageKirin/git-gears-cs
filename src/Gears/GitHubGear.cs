@@ -510,6 +510,8 @@ public class GitHubGear : CommonGear, IGear
 		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
 		if (gqlResponse.Data != null)
 		{
+			gqlResponse.Data.user.gist.url =
+				$"https://gist.{RepoUrl.Host}/{RepoUrl.Owner}/{gqlResponse.Data.user.gist.name}";
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
 			return ToGistInfo(gqlResponse.Data.user.gist);
 		}
@@ -559,6 +561,7 @@ public class GitHubGear : CommonGear, IGear
 			{
 				foreach(var n in gqlResponse.Data.user.gists.nodes)
 				{
+					n.url = $"https://gist.{RepoUrl.Host}/{RepoUrl.Owner}/{n.name}";
 					list.Add(ToGistInfo(n));
 				}
 			}
@@ -573,6 +576,7 @@ public class GitHubGear : CommonGear, IGear
 		var gist = new GistInfo();
 		gist.Id = gqlData.id;
 		gist.Name = gqlData.name;
+		gist.Url = gqlData.url;
 		gist.Description = gqlData.description;
 		gist.CreatedAt = gqlData.createdAt;
 		gist.PushedAt = gqlData.pushedAt;
