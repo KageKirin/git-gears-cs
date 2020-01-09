@@ -17,7 +17,7 @@ public class GetGist
 			if (gist.HasValue)
 			{
 				Console.WriteLine($"Gist {opts.Name} for {opts.Remote}");
-				Console.WriteLine($"{gist.Value.Description} - {gist.Value.Name} - {gist.Value.Id}");
+				Console.WriteLine($"{gist.Value.Description} - {gist.Value.Name} - {gist.Value.Id} - {gist.Value.Url}");
 			}
 			else
 			{
