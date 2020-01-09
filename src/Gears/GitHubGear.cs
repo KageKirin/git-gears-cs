@@ -44,7 +44,7 @@ public class GitHubGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public IssueInfo? CreateIssue(string title, string body)
+	public IssueInfo? CreateIssue(CreateIssueParams p)
 	{
 		var repo = GetRepo();
 		if (repo.HasValue)
@@ -75,8 +75,8 @@ public class GitHubGear : CommonGear, IGear
 				Variables = new {
 					_mutationId = Guid.NewGuid().ToString(),
 					_repositoryId = repo.Value.Id,
-					_title = title,
-					_body = body,
+					_title = p.title,
+					_body = p.body,
 				}
 			};
 			// clang-format on

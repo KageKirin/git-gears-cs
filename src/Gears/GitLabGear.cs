@@ -48,16 +48,16 @@ public class GitLabGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public IssueInfo? CreateIssue(string title, string body)
+	public IssueInfo? CreateIssue(CreateIssueParams p)
 	{
 		var rstResponse = RestEndpoint
 				.WithClient(FlurlClient)
-				.AppendPathSegments("projects", GetRepoProjectId(), "issues")
+							  .AppendPathSegments("projects", GetRepoProjectId(), "issues")
 				.PostJsonAsync(new {
-					title = title,
-					description = body
+					title = p.title,
+					description = p.body
 				})
-				.Result;
+							  .Result;
 		var rstResponseContent = JObject.Parse(rstResponse.Content.ReadAsStringAsync().Result);
 		if (rstResponseContent != null)
 		{
@@ -218,15 +218,15 @@ public class GitLabGear : CommonGear, IGear
 		var rstResponse = JArray.Parse(
 			RestEndpoint
 				.WithClient(FlurlClient)
-				.AppendPathSegments("projects", project_id, "merge_requests")
-				.SetQueryParams(new {
-					source_branch = branch,
-					max_results = 1,
-					order_by = "updated_at",
-					sort = "desc",
-				})
-				.GetStringAsync()
-				.Result);
+										   .AppendPathSegments("projects", project_id, "merge_requests")
+										   .SetQueryParams(new {
+											   source_branch = branch,
+											   max_results = 1,
+											   order_by = "updated_at",
+											   sort = "desc",
+										   })
+										   .GetStringAsync()
+										   .Result);
 
 		Console.WriteLine($"{rstResponse}");
 		if (rstResponse != null
@@ -295,15 +295,15 @@ public class GitLabGear : CommonGear, IGear
 		var rstResponse = JArray.Parse(
 			RestEndpoint
 				.WithClient(FlurlClient)
-				.AppendPathSegments("projects", project_id, "merge_requests")
-				.SetQueryParams(new {
-					max_results = 100,
-					order_by = "updated_at",
-					sort = "desc",
-				})
-				.GetStringAsync()
-				.Result);
-			
+										   .AppendPathSegments("projects", project_id, "merge_requests")
+										   .SetQueryParams(new {
+											   max_results = 100,
+											   order_by = "updated_at",
+											   sort = "desc",
+										   })
+										   .GetStringAsync()
+										   .Result);
+
 		Console.WriteLine($"{rstResponse}");
 		if (rstResponse != null
 		&&  rstResponse.Count > 0)
