@@ -50,14 +50,21 @@ public class GitLabGear : CommonGear, IGear
 
 	public IssueInfo? CreateIssue(CreateIssueParams p)
 	{
-		var rstResponse = RestEndpoint.WithClient(FlurlClient)
-							  .AppendPathSegments("projects", GetRepoProjectId(), "issues")
-							  .PostJsonAsync(new {title = p.title, description = p.body})
-							  .Result;
-		var rstResponseContent = JObject.Parse(rstResponse.Content.ReadAsStringAsync().Result);
-		if (rstResponseContent != null)
+		try
 		{
-			return ToIssueInfo(rstResponseContent);
+			var rstResponse = RestEndpoint.WithClient(FlurlClient)
+								  .AppendPathSegments("projects", GetRepoProjectId(), "issues")
+								  .PostJsonAsync(new {title = p.title, description = p.body})
+								  .Result;
+			var rstResponseContent = JObject.Parse(rstResponse.Content.ReadAsStringAsync().Result);
+			if (rstResponseContent != null)
+			{
+				return ToIssueInfo(rstResponseContent);
+			}
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine("The request failed with following error: {0}.", e);
 		}
 		return null;
 	}
@@ -164,19 +171,26 @@ public class GitLabGear : CommonGear, IGear
 
 	public PullRequestInfo? CreatePullRequest(CreatePullRequestParams p)
 	{
-		var rstResponse = RestEndpoint.WithClient(FlurlClient)
-							  .AppendPathSegments("projects", GetRepoProjectId(), "merge_requests")
-							  .PostJsonAsync(new {
-								  source_branch = p.branch,		  //
-								  target_branch = p.targetBranch, //
-								  title = p.title,				  //
-								  description = p.body			  //
-							  })
-							  .Result;
-		var rstResponseContent = JObject.Parse(rstResponse.Content.ReadAsStringAsync().Result);
-		if (rstResponseContent != null)
+		try
 		{
-			return ToPullRequestInfo(rstResponseContent);
+			var rstResponse = RestEndpoint.WithClient(FlurlClient)
+								  .AppendPathSegments("projects", GetRepoProjectId(), "merge_requests")
+								  .PostJsonAsync(new {
+									  source_branch = p.branch,		  //
+									  target_branch = p.targetBranch, //
+									  title = p.title,				  //
+									  description = p.body			  //
+								  })
+								  .Result;
+			var rstResponseContent = JObject.Parse(rstResponse.Content.ReadAsStringAsync().Result);
+			if (rstResponseContent != null)
+			{
+				return ToPullRequestInfo(rstResponseContent);
+			}
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine("The request failed with following error: {0}.", e);
 		}
 		return null;
 	}
