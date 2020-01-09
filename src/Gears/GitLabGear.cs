@@ -50,13 +50,9 @@ public class GitLabGear : CommonGear, IGear
 
 	public IssueInfo? CreateIssue(CreateIssueParams p)
 	{
-		var rstResponse = RestEndpoint
-				.WithClient(FlurlClient)
+		var rstResponse = RestEndpoint.WithClient(FlurlClient)
 							  .AppendPathSegments("projects", GetRepoProjectId(), "issues")
-				.PostJsonAsync(new {
-					title = p.title,
-					description = p.body
-				})
+							  .PostJsonAsync(new {title = p.title, description = p.body})
 							  .Result;
 		var rstResponseContent = JObject.Parse(rstResponse.Content.ReadAsStringAsync().Result);
 		if (rstResponseContent != null)
@@ -211,8 +207,8 @@ public class GitLabGear : CommonGear, IGear
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
 			project_id = GetProjectIdFromGid(gqlResponse.Data.project.id);
-			if (gqlResponse.Data.project.mergeRequests.nodes != null
-			&&  gqlResponse.Data.project.mergeRequests.nodes.Count > 0)
+			if (gqlResponse.Data.project.mergeRequests.nodes != null &&
+				gqlResponse.Data.project.mergeRequests.nodes.Count > 0)
 			{
 				return ToPullRequestInfo(gqlResponse.Data.project.mergeRequests.nodes[0]);
 			}
@@ -220,9 +216,7 @@ public class GitLabGear : CommonGear, IGear
 
 		// workaround
 		project_id = project_id ?? GetRepoProjectId();
-		var rstResponse = JArray.Parse(
-			RestEndpoint
-				.WithClient(FlurlClient)
+		var rstResponse = JArray.Parse(RestEndpoint.WithClient(FlurlClient)
 										   .AppendPathSegments("projects", project_id, "merge_requests")
 										   .SetQueryParams(new {
 											   source_branch = branch,
@@ -234,8 +228,7 @@ public class GitLabGear : CommonGear, IGear
 										   .Result);
 
 		Console.WriteLine($"{rstResponse}");
-		if (rstResponse != null
-		&&  rstResponse.Count > 0)
+		if (rstResponse != null && rstResponse.Count > 0)
 		{
 			return ToPullRequestInfo(rstResponse[0]);
 		}
@@ -284,8 +277,8 @@ public class GitLabGear : CommonGear, IGear
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
 			project_id = GetProjectIdFromGid(gqlResponse.Data.project.id);
-			if (gqlResponse.Data.project.mergeRequests.nodes != null
-			&&  gqlResponse.Data.project.mergeRequests.nodes.Count > 0)
+			if (gqlResponse.Data.project.mergeRequests.nodes != null &&
+				gqlResponse.Data.project.mergeRequests.nodes.Count > 0)
 			{
 				foreach(var n in gqlResponse.Data.project.mergeRequests.nodes)
 				{
@@ -297,9 +290,7 @@ public class GitLabGear : CommonGear, IGear
 
 		// workaround
 		project_id = project_id ?? GetRepoProjectId();
-		var rstResponse = JArray.Parse(
-			RestEndpoint
-				.WithClient(FlurlClient)
+		var rstResponse = JArray.Parse(RestEndpoint.WithClient(FlurlClient)
 										   .AppendPathSegments("projects", project_id, "merge_requests")
 										   .SetQueryParams(new {
 											   max_results = 100,
@@ -310,8 +301,7 @@ public class GitLabGear : CommonGear, IGear
 										   .Result);
 
 		Console.WriteLine($"{rstResponse}");
-		if (rstResponse != null
-		&&  rstResponse.Count > 0)
+		if (rstResponse != null && rstResponse.Count > 0)
 		{
 			foreach(var n in rstResponse)
 			{
