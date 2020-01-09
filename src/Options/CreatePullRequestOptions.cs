@@ -11,15 +11,14 @@ namespace git_gears
 		Please note that this operation will fail if you haven't pushed the branch to the remote yet.")]
 public class CreatePullRequestOptions : CommonCreateOptions
 {
-	[Option('t', "title", Required = false, HelpText = "pullrequest title.", Default = "new pullrequest")]
+	[Option('t', "title", Required = false, HelpText = "pullrequest title.")]
 	public string Title
 	{
 		get;
 		set;
 	}
 
-	[Option('m', "message", Required = false, HelpText = "pullrequest body in Markdown.",
-			Default = "edit this message")]
+	[Option('m', "message", Required = false, HelpText = "pullrequest body in Markdown.")]
 	public string Body
 	{
 		get;
