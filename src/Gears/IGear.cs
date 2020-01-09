@@ -56,6 +56,21 @@ public struct CreatePullRequestParams
 	}
 }
 
+public struct CreateRepoParams
+{
+	public string description;
+	public string homepage;
+	public bool isPublic;
+	//! TODO: more params
+
+	public CreateRepoParams(string description, string homepage, bool isPublic)
+	{
+		this.description = description;
+		this.homepage = homepage;
+		this.isPublic = isPublic;
+	}
+}
+
 public interface IGear
 {
 	void Test();
@@ -73,5 +88,6 @@ public interface IGear
 	GistInfo? CreateGist(CreateGistParams p);
 	IssueInfo? CreateIssue(CreateIssueParams p);
 	PullRequestInfo? CreatePullRequest(CreatePullRequestParams p);
+	RepoInfo? CreateRepo(CreateRepoParams p);
 }
 }
