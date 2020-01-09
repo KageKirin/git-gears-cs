@@ -2,6 +2,28 @@ using System.Collections.Generic;
 
 namespace git_gears
 {
+public struct CreateGistParams
+{
+	public string title;
+	public string description;
+	public string filename;
+	public string body;
+	public bool isRepoGist;
+	public bool isPublic;
+	//! TODO: more params
+
+	public CreateGistParams(string title, string description, string filename, string body, bool isRepoGist,
+							bool isPublic)
+	{
+		this.title = title;
+		this.description = description;
+		this.filename = filename;
+		this.body = body;
+		this.isRepoGist = isRepoGist;
+		this.isPublic = isPublic;
+	}
+}
+
 public struct CreateIssueParams
 {
 	public string title;
@@ -48,6 +70,7 @@ public interface IGear
 	IEnumerable<PullRequestInfo>ListPullRequests(); //! TODO: params + filter params
 	IEnumerable<RepoInfo>ListRepos();				//! TODO: params + filter params
 
+	GistInfo? CreateGist(CreateGistParams p);
 	IssueInfo? CreateIssue(CreateIssueParams p);
 	PullRequestInfo? CreatePullRequest(CreatePullRequestParams p);
 }
