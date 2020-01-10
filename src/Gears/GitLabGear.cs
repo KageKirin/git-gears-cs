@@ -54,7 +54,11 @@ public class GitLabGear : CommonGear, IGear
 		{
 			var rstResponse = RestEndpoint.WithClient(FlurlClient)
 								  .AppendPathSegments("projects", GetRepoProjectId(), "issues")
-								  .PostJsonAsync(new {title = p.title, description = p.body})
+								  .PostJsonAsync(new {
+									  //
+									  title = p.title,	   //
+									  description = p.body //
+								  })
 								  .Result;
 			var rstResponseContent = JObject.Parse(rstResponse.Content.ReadAsStringAsync().Result);
 			if (rstResponseContent != null)
