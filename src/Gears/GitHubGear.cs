@@ -5,6 +5,10 @@ using System.Collections.Generic;
 using GraphQL.Client;
 using GraphQL.Common.Request;
 using GraphQL.Common.Response;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Flurl;
+using Flurl.Http;
 
 namespace git_gears
 {
@@ -479,6 +483,41 @@ public class GitHubGear : CommonGear, IGear
 
 	public GistInfo? CreateGist(CreateGistParams p)
 	{
+		try
+		{
+			// dynamic queryData = new {
+			//	description = p.title,
+			//	files = new {
+			//		gist = new {content = p.body}
+			//	}
+			//};
+			// clang-format off
+			string query = @"{"															   //
+						   + @"""description"" : " + $"{JsonConvert.ToString($"{p.title} -- {p.description}")},"   //
+						   + @"""public"" : " + $"{p.isPublic.ToString().ToLower()},"	   //
+						   + @"""files"" : {"											   //
+						   + $"  {JsonConvert.ToString(p.filename)} : "					   //
+						   + @"{""content"" : " + $"{JsonConvert.ToString(p.body)}"		   //
+						   + @"  }"														   //
+						   + @" }"														   //
+						   + @"}";														   //
+			// clang-format on
+			var rstResponse = RestEndpoint.WithClient(FlurlClient)
+								  .AppendPathSegments("gists")
+								  .PostJsonAsync((object) JObject.Parse(query))
+								  .Result;
+			dynamic rstResponseContent = JObject.Parse(rstResponse.Content.ReadAsStringAsync().Result);
+			Console.WriteLine($"{rstResponseContent}");
+			if (rstResponseContent != null)
+			{
+				rstResponseContent.url = rstResponseContent.html_url;
+				return ToGistInfo(rstResponseContent);
+			}
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine("The request failed with following error: {0}.", e);
+		}
 		return null;
 	}
 
