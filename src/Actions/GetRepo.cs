@@ -17,7 +17,7 @@ public class GetRepo
 			if (repo.HasValue)
 			{
 				Console.WriteLine($"Repo for {opts.Remote}");
-				Console.WriteLine($"{repo.Value.Name} -- {repo.Value.Description}");
+				Console.WriteLine($"{repo.Value.Name} -- {repo.Value.Description} -- {repo.Value.Homepage}");
 				Console.WriteLine($"{repo.Value.Url}");
 			}
 			else

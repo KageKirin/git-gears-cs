@@ -44,7 +44,7 @@ public class GitHubGear : CommonGear, IGear
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
 		}
-	}
+			}
 
 	///////////////////////////////////////////////////////////////////////////
 
@@ -452,6 +452,7 @@ public class GitHubGear : CommonGear, IGear
 					url,
 					name,
 					description,
+					homepageUrl,
 					nameWithOwner,
 					createdAt,
 					pushedAt,
@@ -490,6 +491,7 @@ public class GitHubGear : CommonGear, IGear
 							url,
 							name,
 							description,
+							homepageUrl,
 							nameWithOwner,
 							createdAt,
 							pushedAt,
@@ -530,6 +532,7 @@ public class GitHubGear : CommonGear, IGear
 		repo.Name = gqlData.name;
 		repo.Path = gqlData.nameWithOwner;
 		repo.Description = gqlData.description;
+		repo.Homepage = gqlData.homepageUrl;
 		return repo;
 	}
 
