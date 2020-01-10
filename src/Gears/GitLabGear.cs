@@ -473,6 +473,63 @@ public class GitLabGear : CommonGear, IGear
 
 	public GistInfo? CreateGist(CreateGistParams p)
 	{
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			mutation($_mutationId: String!, $_title: String!, $_body: String!, $_visibility: VisibilityLevelsEnum!, $_description: String, $_filename: String, $_fullPath: ID)
+			{
+				createSnippet(input: {
+					clientMutationId: $_mutationId,
+					title: $_title,
+					fileName: $_filename,
+					description: $_description,
+					visibilityLevel: $_visibility,
+					content: $_body,
+					projectPath: $_fullPath,
+				})
+				{
+					clientMutationId,
+					snippet
+					{
+						id,
+						title,
+						description,
+						createdAt,
+						updatedAt,
+						fileName,
+						content,
+						webUrl,
+					}
+				}
+			}",
+			Variables = new {
+				_mutationId = Guid.NewGuid().ToString(),
+				_title = p.title,
+				_body = p.body,
+				_description = p.description,
+				_filename = p.filename,
+				_visibility = p.isPublic ? "public" : "private",
+				_fullPath = p.isRepoGist ? $"{RepoUrl.Owner}/{RepoUrl.RepoName}" : "",
+			}
+		};
+		// clang-format on
+		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		if (gqlResponse.Data != null)
+		{
+			Console.WriteLine($"{gqlResponse.Data.ToString()}");
+			if (gqlResponse.Data.createSnippet.snippet != null)
+			{
+				return ToGistInfo(gqlResponse.Data.createSnippet.snippet);
+			}
+		}
+		else
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine($"{e.Message}");
+			}
+		}
+
 		return null;
 	}
 
@@ -574,7 +631,7 @@ public class GitLabGear : CommonGear, IGear
 		gist.Id = gqlData.id;
 		gist.Name = gqlData.fileName ?? gqlData.file_name;
 		gist.Url = gqlData.webUrl ?? gqlData.web_url;
-		gist.Description = gqlData.description;
+		gist.Description = $"{gqlData.title} -- {gqlData.description}";
 		gist.CreatedAt = gqlData.createdAt ?? gqlData.created_at;
 		gist.PushedAt = gqlData.updatedAt ?? gqlData.updated_at;
 		return gist;
