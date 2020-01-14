@@ -57,19 +57,191 @@ public class GitHubGear : CommonGear, IGear
 
 	public UserInfo? GetUser(string login)
 	{
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query($_login: String!)
+			{
+				user(login: $_login)
+				{
+					id,
+					name,
+					login,
+					email,
+					url,
+
+					bio,
+					company,
+					websiteUrl,
+				}
+			}",
+			Variables = new {
+				_login = login
+			}
+		};
+		// clang-format on
+		Console.WriteLine($"{gqlRequest.Query}");
+		// Console.WriteLine($"{gqlRequest.Variables}");
+		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		Console.WriteLine($"{gqlResponse.Data != null}");
+
+		if (gqlResponse.Data != null)
+		{
+			Console.WriteLine($"{gqlResponse.Data.ToString()}");
+			return ToUserInfo(gqlResponse.Data);
+		}
+		else if (gqlResponse.Errors != null && gqlResponse.Data.user != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine("GraphQL error: ${e.Message}");
+			}
+		}
+
 		return null;
 	}
 
+	UserInfo ToUserInfo(dynamic gqlData)
+	{
+		var userInfo = new UserInfo();
+		userInfo.Id = gqlData.user.id;
+		userInfo.Name = gqlData.user.name;
+		userInfo.Login = gqlData.user.login;
+		userInfo.Email = gqlData.user.email;
+		userInfo.Url = gqlData.user.url;
+		userInfo.Bio = gqlData.user.bio;
+		userInfo.Company = gqlData.user.company;
+		userInfo.Website = gqlData.user.websiteUrl;
+		return userInfo;
+	}
 
 	public OrganizationInfo? GetOrganization(string login)
 	{
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query($_login: String!)
+			{
+				organization(login: $_login)
+				{
+					id,
+					name,
+					login,
+					email,
+					url,
+					description
+
+					projectsUrl,
+					websiteUrl,
+				}
+			}",
+			Variables = new {
+				_login = login
+			}
+		};
+		// clang-format on
+		Console.WriteLine($"{gqlRequest.Query}");
+		// Console.WriteLine($"{gqlRequest.Variables}");
+		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		Console.WriteLine($"{gqlResponse.Data != null}");
+
+		if (gqlResponse.Data != null && gqlResponse.Data.organization != null)
+		{
+			Console.WriteLine($"{gqlResponse.Data.ToString()}");
+			return ToOrganizationInfo(gqlResponse.Data);
+		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine("GraphQL error: ${e.Message}");
+			}
+		}
+
 		return null;
 	}
 
+	OrganizationInfo ToOrganizationInfo(dynamic gqlData)
+	{
+		var orgInfo = new OrganizationInfo();
+		orgInfo.Id = gqlData.organization.id;
+		orgInfo.Name = gqlData.organization.name;
+		orgInfo.Login = gqlData.organization.login;
+		orgInfo.Email = gqlData.organization.email;
+		orgInfo.Url = gqlData.organization.url;
+		orgInfo.Description = gqlData.organization.description;
+		orgInfo.Website = gqlData.organization.websiteUrl;
+		return orgInfo;
+	}
 
 	public OwnerInfo? GetOwner(string login)
 	{
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			query($_login: String!)
+			{
+				organization(login: $_login)
+				{
+					id,
+					name,
+					login,
+					email,
+					url,
+				}
+				user(login: $_login)
+				{
+					id,
+					name,
+					login,
+					email,
+					url,
+				}
+			}",
+			Variables = new {
+				_login = login
+			}
+		};
+		// clang-format on
+		Console.WriteLine($"{gqlRequest.Query}");
+		// Console.WriteLine($"{gqlRequest.Variables}");
+		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		Console.WriteLine($"{gqlResponse.Data != null}");
+
+		if (gqlResponse.Data != null && (gqlResponse.Data.organization != null || gqlResponse.Data.user != null))
+		{
+			Console.WriteLine($"{gqlResponse.Data.ToString()}");
+			return ToOwnerInfo(gqlResponse.Data);
+		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine("GraphQL error: ${e.Message}");
+			}
+		}
+
 		return null;
+	}
+
+	OwnerInfo ToOwnerInfo(dynamic gqlData)
+	{
+		var ownerInfo = new OwnerInfo();
+		if (gqlData.organization != null)
+		{
+			ownerInfo.Id = gqlData.organization.id;
+			ownerInfo.Name = gqlData.organization.name;
+			ownerInfo.Login = gqlData.organization.login;
+			ownerInfo.Url = gqlData.organization.url;
+		}
+		else if (gqlData.user != null)
+		{
+			ownerInfo.Id = gqlData.user.id;
+			ownerInfo.Name = gqlData.user.name;
+			ownerInfo.Login = gqlData.user.login;
+			ownerInfo.Url = gqlData.user.url;
+		}
+		return ownerInfo;
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -654,16 +826,15 @@ public class GitHubGear : CommonGear, IGear
 						   + @" }"														   //
 						   + @"}";														   //
 			// clang-format on
-			var rstResponse = RestEndpoint.WithClient(FlurlClient)
-								  .AppendPathSegments("gists")
-								  .PostJsonAsync((object) JObject.Parse(query))
-								  .Result;
-			dynamic rstResponseContent = JObject.Parse(rstResponse.Content.ReadAsStringAsync().Result);
-			Console.WriteLine($"{rstResponseContent}");
-			if (rstResponseContent != null)
+			dynamic rstResponse = JObject.Parse(RestEndpoint.WithClient(FlurlClient)
+													.AppendPathSegments("gists")
+													.PostJsonAsync((object) JObject.Parse(query))
+													.Result.Content.ReadAsStringAsync()
+													.Result);
+			if (rstResponse != null)
 			{
-				rstResponseContent.url = rstResponseContent.html_url;
-				return ToGistInfo(rstResponseContent);
+				rstResponse.url = rstResponse.html_url;
+				return ToGistInfo(rstResponse);
 			}
 		}
 		catch (Exception e)
