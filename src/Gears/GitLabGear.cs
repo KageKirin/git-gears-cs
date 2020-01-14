@@ -50,19 +50,119 @@ public class GitLabGear : CommonGear, IGear
 
 	public UserInfo? GetUser(string login)
 	{
+		try
+		{
+			// search user -> id
+			var rstResponse = JArray.Parse(RestEndpoint.WithClient(FlurlClient)
+											   .AppendPathSegments("users")
+											   .SetQueryParams(new {
+												   username = login,
+											   })
+											   .GetStringAsync()
+											   .Result);
+			Console.WriteLine($"{rstResponse}");
+
+			if (rstResponse.Count > 0)
+			{
+				dynamic userData = rstResponse[0];
+				string userId = $"{userData.id}";
+				// then get user data
+				var rstResponseUser = JObject.Parse(
+					RestEndpoint.WithClient(FlurlClient).AppendPathSegments("users", userId).GetStringAsync().Result);
+				Console.WriteLine($"{rstResponseUser}");
+				if (rstResponseUser != null)
+				{
+					return ToUserInfo(rstResponseUser);
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine($"The request failed with following error: {e}.");
+		}
+
 		return null;
 	}
 
+	UserInfo ToUserInfo(dynamic gqlData)
+	{
+		var userInfo = new UserInfo();
+		userInfo.Id = gqlData.id;
+		userInfo.Name = gqlData.name;
+		userInfo.Login = gqlData.username;
+		userInfo.Email = gqlData.public_email;
+		userInfo.Url = gqlData.web_url;
+		userInfo.Bio = gqlData.bio;
+		userInfo.Company = gqlData.organization;
+		userInfo.Website = gqlData.website_url;
+		return userInfo;
+	}
 
 	public OrganizationInfo? GetOrganization(string login)
 	{
+		try
+		{
+			var rstResponse = JObject.Parse(RestEndpoint.WithClient(FlurlClient)
+												.AppendPathSegments("groups", login) //
+												.GetStringAsync()
+												.Result);
+			Console.WriteLine($"{rstResponse}");
+			if (rstResponse != null)
+			{
+				return ToOrganizationInfo(rstResponse);
+			}
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine($"The request failed with following error: {e}.");
+		}
+
 		return null;
 	}
 
+	OrganizationInfo ToOrganizationInfo(dynamic gqlData)
+	{
+		var orgInfo = new OrganizationInfo();
+		orgInfo.Id = gqlData.id;
+		orgInfo.Name = gqlData.full_name;
+		orgInfo.Login = gqlData.name;
+		orgInfo.Email = gqlData.email;
+		orgInfo.Url = gqlData.web_url;
+		orgInfo.Description = gqlData.description;
+		orgInfo.Website = gqlData.web_url;
+		return orgInfo;
+	}
 
 	public OwnerInfo? GetOwner(string login)
 	{
+		try
+		{
+			var rstResponse = JObject.Parse(RestEndpoint.WithClient(FlurlClient)
+												.AppendPathSegments("namespaces", login) //
+												.GetStringAsync()
+												.Result);
+			Console.WriteLine($"{rstResponse}");
+			if (rstResponse != null)
+			{
+				return ToOwnerInfo(rstResponse);
+			}
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine($"The request failed with following error: {e}.");
+		}
+
 		return null;
+	}
+
+	OwnerInfo ToOwnerInfo(dynamic gqlData)
+	{
+		var ownerInfo = new OwnerInfo();
+		ownerInfo.Id = gqlData.id;
+		ownerInfo.Name = gqlData.name;
+		ownerInfo.Login = gqlData.full_path;
+		ownerInfo.Url = gqlData.web_url;
+		return ownerInfo;
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -71,18 +171,18 @@ public class GitLabGear : CommonGear, IGear
 	{
 		try
 		{
-			var rstResponse = RestEndpoint.WithClient(FlurlClient)
-								  .AppendPathSegments("projects", GetRepoProjectId(), "issues")
-								  .PostJsonAsync(new {
-									  //
-									  title = p.title,	   //
-									  description = p.body //
-								  })
-								  .Result;
-			var rstResponseContent = JObject.Parse(rstResponse.Content.ReadAsStringAsync().Result);
-			if (rstResponseContent != null)
+			var rstResponse = JObject.Parse(RestEndpoint.WithClient(FlurlClient)
+												.AppendPathSegments("projects", GetRepoProjectId(), "issues")
+												.PostJsonAsync(new {
+													//
+													title = p.title,	 //
+													description = p.body //
+												})
+												.Result.Content.ReadAsStringAsync()
+												.Result);
+			if (rstResponse != null)
 			{
-				return ToIssueInfo(rstResponseContent);
+				return ToIssueInfo(rstResponse);
 			}
 		}
 		catch (Exception e)
@@ -213,19 +313,19 @@ public class GitLabGear : CommonGear, IGear
 	{
 		try
 		{
-			var rstResponse = RestEndpoint.WithClient(FlurlClient)
-								  .AppendPathSegments("projects", GetRepoProjectId(), "merge_requests")
-								  .PostJsonAsync(new {
-									  source_branch = p.branch,		  //
-									  target_branch = p.targetBranch, //
-									  title = p.title,				  //
-									  description = p.body			  //
-								  })
-								  .Result;
-			var rstResponseContent = JObject.Parse(rstResponse.Content.ReadAsStringAsync().Result);
-			if (rstResponseContent != null)
+			var rstResponse = JObject.Parse(RestEndpoint.WithClient(FlurlClient)
+												.AppendPathSegments("projects", GetRepoProjectId(), "merge_requests")
+												.PostJsonAsync(new {
+													source_branch = p.branch,		//
+													target_branch = p.targetBranch, //
+													title = p.title,				//
+													description = p.body			//
+												})
+												.Result.Content.ReadAsStringAsync()
+												.Result);
+			if (rstResponse != null)
 			{
-				return ToPullRequestInfo(rstResponseContent);
+				return ToPullRequestInfo(rstResponse);
 			}
 		}
 		catch (Exception e)
@@ -275,7 +375,8 @@ public class GitLabGear : CommonGear, IGear
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
-			project_id = GetProjectIdFromGid(gqlResponse.Data.project.id);
+			string project_gid = gqlResponse.Data.project.id;
+			project_id = GetProjectIdFromGid(project_gid);
 			if (gqlResponse.Data.project.mergeRequests.nodes != null &&
 				gqlResponse.Data.project.mergeRequests.nodes.Count > 0)
 			{
@@ -352,7 +453,8 @@ public class GitLabGear : CommonGear, IGear
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
-			project_id = GetProjectIdFromGid(gqlResponse.Data.project.id);
+			string project_gid = gqlResponse.Data.project.id;
+			project_id = GetProjectIdFromGid(project_gid);
 			if (gqlResponse.Data.project.mergeRequests.nodes != null &&
 				gqlResponse.Data.project.mergeRequests.nodes.Count > 0)
 			{
@@ -434,23 +536,23 @@ public class GitLabGear : CommonGear, IGear
 	{
 		try
 		{
-			var rstResponse = RestEndpoint.WithClient(FlurlClient)
-								  .AppendPathSegments("projects")
-								  .PostJsonAsync(new {
-									  name = this.RepoUrl.RepoName,
-									  // path = this.RepoUrl.Path,
-									  description = $"{p.description}\n{p.homepage}",
-									  visibility = p.isPublic ? "public" : "private",
-									  // good defaults
-									  lfs_enabled = true, // or check whether LFS enabled in local repo
-									  remove_source_branch_after_merge = true,
-									  autoclose_referenced_issues = true,
-								  })
-								  .Result;
-			var rstResponseContent = JObject.Parse(rstResponse.Content.ReadAsStringAsync().Result);
-			if (rstResponseContent != null)
+			var rstResponse = JObject.Parse(RestEndpoint.WithClient(FlurlClient)
+												.AppendPathSegments("projects")
+												.PostJsonAsync(new {
+													name = this.RepoUrl.RepoName,
+													// path = this.RepoUrl.Path,
+													description = $"{p.description}\n{p.homepage}",
+													visibility = p.isPublic ? "public" : "private",
+													// good defaults
+													lfs_enabled = true, // or check whether LFS enabled in local repo
+													remove_source_branch_after_merge = true,
+													autoclose_referenced_issues = true,
+												})
+												.Result.Content.ReadAsStringAsync()
+												.Result);
+			if (rstResponse != null)
 			{
-				return ToRepoInfo(rstResponseContent);
+				return ToRepoInfo(rstResponse);
 			}
 		}
 		catch (Exception e)
