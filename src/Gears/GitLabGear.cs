@@ -70,6 +70,7 @@ public class GitLabGear : CommonGear, IGear
 		{
 			Console.WriteLine("The request failed with following error: {0}.", e);
 		}
+
 		return null;
 	}
 
@@ -109,6 +110,14 @@ public class GitLabGear : CommonGear, IGear
 				return ToIssueInfo(gqlResponse.Data.project.issue);
 			}
 		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine($"GraphQL error: {e.Message}");
+			}
+		}
+
 		return null;
 	}
 
@@ -157,6 +166,14 @@ public class GitLabGear : CommonGear, IGear
 				return list as IEnumerable<IssueInfo>;
 			}
 		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine($"GraphQL error: {e.Message}");
+			}
+		}
+
 		return null;
 	}
 
@@ -196,6 +213,7 @@ public class GitLabGear : CommonGear, IGear
 		{
 			Console.WriteLine("The request failed with following error: {0}.", e);
 		}
+
 		return null;
 	}
 
@@ -243,6 +261,13 @@ public class GitLabGear : CommonGear, IGear
 				gqlResponse.Data.project.mergeRequests.nodes.Count > 0)
 			{
 				return ToPullRequestInfo(gqlResponse.Data.project.mergeRequests.nodes[0]);
+			}
+		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
 		}
 
@@ -319,6 +344,13 @@ public class GitLabGear : CommonGear, IGear
 				return list as IEnumerable<PullRequestInfo>;
 			}
 		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine($"GraphQL error: {e.Message}");
+			}
+		}
 
 		// workaround
 		project_id = project_id ?? GetRepoProjectId();
@@ -387,7 +419,7 @@ public class GitLabGear : CommonGear, IGear
 								  .AppendPathSegments("projects")
 								  .PostJsonAsync(new {
 									  name = this.RepoUrl.RepoName,
-									  //path = this.RepoUrl.Path,
+									  // path = this.RepoUrl.Path,
 									  description = $"{p.description}\n{p.homepage}",
 									  visibility = p.isPublic ? "public" : "private",
 									  // good defaults
@@ -406,6 +438,7 @@ public class GitLabGear : CommonGear, IGear
 		{
 			Console.WriteLine("The request failed with following error: {0}.", e);
 		}
+
 		return null;
 	}
 
@@ -434,11 +467,19 @@ public class GitLabGear : CommonGear, IGear
 		// clang-format on
 		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
 		Console.WriteLine($"{gqlResponse.Data != null}");
-		if (gqlResponse.Data != null)
+		if (gqlResponse.Data != null && gqlResponse.Data.project != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
 			return ToRepoInfo(gqlResponse.Data.project);
 		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine($"GraphQL error: {e.Message}");
+			}
+		}
+
 		return null;
 	}
 
@@ -489,6 +530,14 @@ public class GitLabGear : CommonGear, IGear
 
 			return list as IEnumerable<RepoInfo>;
 		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine($"GraphQL error: {e.Message}");
+			}
+		}
+
 		return null;
 	}
 
@@ -556,11 +605,11 @@ public class GitLabGear : CommonGear, IGear
 				return ToGistInfo(gqlResponse.Data.createSnippet.snippet);
 			}
 		}
-		else
+		else if (gqlResponse.Errors != null)
 		{
 			foreach(var e in gqlResponse.Errors)
 			{
-				Console.WriteLine($"{e.Message}");
+				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
 		}
 
@@ -605,6 +654,14 @@ public class GitLabGear : CommonGear, IGear
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
 			return ToGistInfo(gqlResponse.Data["currentUser"].snippets.nodes[0]);
 		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine($"GraphQL error: {e.Message}");
+			}
+		}
+
 		return null;
 	}
 
@@ -656,6 +713,14 @@ public class GitLabGear : CommonGear, IGear
 
 			return list as IEnumerable<GistInfo>;
 		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine($"GraphQL error: {e.Message}");
+			}
+		}
+
 		return null;
 	}
 
