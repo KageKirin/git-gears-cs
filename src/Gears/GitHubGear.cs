@@ -44,7 +44,14 @@ public class GitHubGear : CommonGear, IGear
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
 		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine("GraphQL error: ${e.Message}");
 			}
+		}
+	}
 
 	///////////////////////////////////////////////////////////////////////////
 
@@ -93,6 +100,13 @@ public class GitHubGear : CommonGear, IGear
 					return ToIssueInfo(gqlResponse.Data.createIssue.issue);
 				}
 			}
+			else
+			{
+				foreach(var e in gqlResponse.Errors)
+				{
+					Console.WriteLine("GraphQL error: ${e.Message}");
+				}
+			}
 		}
 		return null;
 	}
@@ -135,6 +149,14 @@ public class GitHubGear : CommonGear, IGear
 				return ToIssueInfo(gqlResponse.Data.repository.issue);
 			}
 		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine("GraphQL error: ${e.Message}");
+			}
+		}
+
 		return null;
 	}
 
@@ -185,6 +207,14 @@ public class GitHubGear : CommonGear, IGear
 				return list as IEnumerable<IssueInfo>;
 			}
 		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine("GraphQL error: ${e.Message}");
+			}
+		}
+
 		return null;
 	}
 
@@ -259,6 +289,13 @@ public class GitHubGear : CommonGear, IGear
 					return ToPullRequestInfo(gqlResponse.Data.createPullRequest.pullRequest);
 				}
 			}
+			else
+			{
+				foreach(var e in gqlResponse.Errors)
+				{
+					Console.WriteLine("GraphQL error: ${e.Message}");
+				}
+			}
 		}
 		return null;
 	}
@@ -309,6 +346,14 @@ public class GitHubGear : CommonGear, IGear
 				return ToPullRequestInfo(gqlResponse.Data.repository.pullRequests.nodes[0]);
 			}
 		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine("GraphQL error: ${e.Message}");
+			}
+		}
+
 		return null;
 	}
 
@@ -364,6 +409,14 @@ public class GitHubGear : CommonGear, IGear
 
 			return list as IEnumerable<PullRequestInfo>;
 		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine("GraphQL error: ${e.Message}");
+			}
+		}
+
 		return null;
 	}
 
@@ -427,13 +480,21 @@ public class GitHubGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
+		Console.WriteLine($"{gqlRequest.Query}");
 		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
-		if (gqlResponse.Data != null)
+		if (gqlResponse.Data != null && gqlResponse.Data.createRepository != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
 			if (gqlResponse.Data.createRepository.repository != null)
 			{
 				return ToRepoInfo(gqlResponse.Data.createRepository.repository);
+			}
+		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine("GraphQL error: ${e.Message}");
 			}
 		}
 		return null;
@@ -469,6 +530,13 @@ public class GitHubGear : CommonGear, IGear
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
 			return ToRepoInfo(gqlResponse.Data.repository);
+		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine("GraphQL error: ${e.Message}");
+			}
 		}
 		return null;
 	}
@@ -521,6 +589,14 @@ public class GitHubGear : CommonGear, IGear
 
 			return list as IEnumerable<RepoInfo>;
 		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine("GraphQL error: ${e.Message}");
+			}
+		}
+
 		return null;
 	}
 
@@ -616,6 +692,13 @@ public class GitHubGear : CommonGear, IGear
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
 			return ToGistInfo(gqlResponse.Data.user.gist);
 		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine("GraphQL error: ${e.Message}");
+			}
+		}
 		return null;
 	}
 
@@ -669,6 +752,14 @@ public class GitHubGear : CommonGear, IGear
 
 			return list as IEnumerable<GistInfo>;
 		}
+		else if (gqlResponse.Errors != null)
+		{
+			foreach(var e in gqlResponse.Errors)
+			{
+				Console.WriteLine("GraphQL error: ${e.Message}");
+			}
+		}
+
 		return null;
 	}
 
