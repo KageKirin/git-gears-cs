@@ -381,6 +381,31 @@ public class GitLabGear : CommonGear, IGear
 
 	public RepoInfo? CreateRepo(CreateRepoParams p)
 	{
+		try
+		{
+			var rstResponse = RestEndpoint.WithClient(FlurlClient)
+								  .AppendPathSegments("projects")
+								  .PostJsonAsync(new {
+									  name = this.RepoUrl.RepoName,
+									  //path = this.RepoUrl.Path,
+									  description = $"{p.description}\n{p.homepage}",
+									  visibility = p.isPublic ? "public" : "private",
+									  // good defaults
+									  lfs_enabled = true, // or check whether LFS enabled in local repo
+									  remove_source_branch_after_merge = true,
+									  autoclose_referenced_issues = true,
+								  })
+								  .Result;
+			var rstResponseContent = JObject.Parse(rstResponse.Content.ReadAsStringAsync().Result);
+			if (rstResponseContent != null)
+			{
+				return ToRepoInfo(rstResponseContent);
+			}
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine("The request failed with following error: {0}.", e);
+		}
 		return null;
 	}
 
