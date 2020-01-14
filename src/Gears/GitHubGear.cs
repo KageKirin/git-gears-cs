@@ -387,6 +387,55 @@ public class GitHubGear : CommonGear, IGear
 
 	public RepoInfo? CreateRepo(CreateRepoParams p)
 	{
+		// clang-format off
+		var gqlRequest = new GraphQLRequest{
+			Query = @"
+			mutation($_mutationId: String!,
+					 $_name: String!,
+					 $_visibility: RepositoryVisibility!,
+					 $_description: String,
+					 $_homepageUrl: URI)
+			{
+				createRepository(input: {
+					clientMutationId: $_mutationId,
+					name: $_name,
+					visibility: $_visibility,
+					description: $_description,
+					homepageUrl: $_homepageUrl,
+				})
+				{
+					clientMutationId,
+					repository
+					{
+						id,
+						url,
+						name,
+						description,
+						homepage,
+						nameWithOwner,
+						createdAt,
+						pushedAt,
+					}
+				}
+			}",
+			Variables = new {
+				_mutationId = Guid.NewGuid().ToString(),
+				_name = this.RepoUrl.RepoName,
+				_visibility = p.isPublic ? "PUBLIC" : "PRIVATE",
+				_description = p.description,
+				_homepageUrl = p.homepage,
+			}
+		};
+		// clang-format on
+		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		if (gqlResponse.Data != null)
+		{
+			Console.WriteLine($"{gqlResponse.Data.ToString()}");
+			if (gqlResponse.Data.createRepository.repository != null)
+			{
+				return ToRepoInfo(gqlResponse.Data.createRepository.repository);
+			}
+		}
 		return null;
 	}
 
