@@ -55,6 +55,25 @@ public class GitHubGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
+	public UserInfo? GetUser(string login)
+	{
+		return null;
+	}
+
+
+	public OrganizationInfo? GetOrganization(string login)
+	{
+		return null;
+	}
+
+
+	public OwnerInfo? GetOwner(string login)
+	{
+		return null;
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+
 	public IssueInfo? CreateIssue(CreateIssueParams p)
 	{
 		var repo = GetRepo();
