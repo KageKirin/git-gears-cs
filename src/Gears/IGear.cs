@@ -75,6 +75,10 @@ public interface IGear
 {
 	void Test();
 
+	UserInfo? GetUser(string login);
+	OrganizationInfo? GetOrganization(string login);
+	OwnerInfo? GetOwner(string login);
+
 	GistInfo? GetGist(string name);					//! TODO: params
 	IssueInfo? GetIssue(int number);				//! TODO: params
 	PullRequestInfo? GetPullRequest(string branch); //! TODO: params
