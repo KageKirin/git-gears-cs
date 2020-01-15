@@ -24,18 +24,25 @@ public class Test
 		{
 			Console.WriteLine("-- Test --");
 			gear.Test();
+			Console.WriteLine("-- GetUser --");
+			Console.WriteLine($"{gear.GetUser(url.Owner)}");
+			Console.WriteLine("-- GetOwner --");
+			Console.WriteLine($"{gear.GetOwner(url.Owner)}");
+			Console.WriteLine("-- GetOrganization --");
+			Console.WriteLine($"{gear.GetOrganization(url.Owner)}");
+
 			Console.WriteLine("-- GetRepo --");
-			gear.GetRepo();
+			Console.WriteLine($"{gear.GetRepo()}");
 			Console.WriteLine("-- GetPullRequest --");
-			gear.GetPullRequest(GitUtils.GetCurrentBranch());
+			Console.WriteLine($"{gear.GetPullRequest(GitUtils.GetCurrentBranch())}");
 			Console.WriteLine("-- ListPullRequests --");
-			gear.ListPullRequests();
+			Console.WriteLine($"{gear.ListPullRequests()}");
 			Console.WriteLine("-- ListIssues --");
-			gear.ListIssues();
+			Console.WriteLine($"{gear.ListIssues()}");
 			Console.WriteLine("-- ListGists --");
-			gear.ListGists();
+			Console.WriteLine($"{gear.ListGists()}");
 			Console.WriteLine("-- ListRepos --");
-			gear.ListRepos();
+			Console.WriteLine($"{gear.ListRepos()}");
 		}
 
 		return 0;
