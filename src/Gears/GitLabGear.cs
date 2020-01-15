@@ -187,7 +187,7 @@ public class GitLabGear : CommonGear, IGear
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("The request failed with following error: {0}.", e);
+			Console.WriteLine($"The request failed with following error: {e}.");
 		}
 
 		return null;
@@ -330,7 +330,7 @@ public class GitLabGear : CommonGear, IGear
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("The request failed with following error: {0}.", e);
+			Console.WriteLine($"The request failed with following error: {e}.");
 		}
 
 		return null;
@@ -557,7 +557,7 @@ public class GitLabGear : CommonGear, IGear
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("The request failed with following error: {0}.", e);
+			Console.WriteLine($"The request failed with following error: {e}.");
 		}
 
 		return null;

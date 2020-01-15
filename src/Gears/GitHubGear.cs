@@ -48,7 +48,7 @@ public class GitHubGear : CommonGear, IGear
 		{
 			foreach(var e in gqlResponse.Errors)
 			{
-				Console.WriteLine("GraphQL error: ${e.Message}");
+				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
 		}
 	}
@@ -94,7 +94,7 @@ public class GitHubGear : CommonGear, IGear
 		{
 			foreach(var e in gqlResponse.Errors)
 			{
-				Console.WriteLine("GraphQL error: ${e.Message}");
+				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
 		}
 
@@ -154,7 +154,7 @@ public class GitHubGear : CommonGear, IGear
 		{
 			foreach(var e in gqlResponse.Errors)
 			{
-				Console.WriteLine("GraphQL error: ${e.Message}");
+				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
 		}
 
@@ -217,7 +217,7 @@ public class GitHubGear : CommonGear, IGear
 		{
 			foreach(var e in gqlResponse.Errors)
 			{
-				Console.WriteLine("GraphQL error: ${e.Message}");
+				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
 		}
 
@@ -295,7 +295,7 @@ public class GitHubGear : CommonGear, IGear
 			{
 				foreach(var e in gqlResponse.Errors)
 				{
-					Console.WriteLine("GraphQL error: ${e.Message}");
+					Console.WriteLine($"GraphQL error: {e.Message}");
 				}
 			}
 		}
@@ -344,7 +344,7 @@ public class GitHubGear : CommonGear, IGear
 		{
 			foreach(var e in gqlResponse.Errors)
 			{
-				Console.WriteLine("GraphQL error: ${e.Message}");
+				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
 		}
 
@@ -402,7 +402,7 @@ public class GitHubGear : CommonGear, IGear
 		{
 			foreach(var e in gqlResponse.Errors)
 			{
-				Console.WriteLine("GraphQL error: ${e.Message}");
+				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
 		}
 
@@ -484,7 +484,7 @@ public class GitHubGear : CommonGear, IGear
 			{
 				foreach(var e in gqlResponse.Errors)
 				{
-					Console.WriteLine("GraphQL error: ${e.Message}");
+					Console.WriteLine($"GraphQL error: {e.Message}");
 				}
 			}
 		}
@@ -541,7 +541,7 @@ public class GitHubGear : CommonGear, IGear
 		{
 			foreach(var e in gqlResponse.Errors)
 			{
-				Console.WriteLine("GraphQL error: ${e.Message}");
+				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
 		}
 
@@ -604,7 +604,7 @@ public class GitHubGear : CommonGear, IGear
 		{
 			foreach(var e in gqlResponse.Errors)
 			{
-				Console.WriteLine("GraphQL error: ${e.Message}");
+				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
 		}
 
@@ -685,7 +685,7 @@ public class GitHubGear : CommonGear, IGear
 		{
 			foreach(var e in gqlResponse.Errors)
 			{
-				Console.WriteLine("GraphQL error: ${e.Message}");
+				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
 		}
 		return null;
@@ -726,7 +726,7 @@ public class GitHubGear : CommonGear, IGear
 		{
 			foreach(var e in gqlResponse.Errors)
 			{
-				Console.WriteLine("GraphQL error: ${e.Message}");
+				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
 		}
 		return null;
@@ -784,7 +784,7 @@ public class GitHubGear : CommonGear, IGear
 		{
 			foreach(var e in gqlResponse.Errors)
 			{
-				Console.WriteLine("GraphQL error: ${e.Message}");
+				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
 		}
 
@@ -839,7 +839,7 @@ public class GitHubGear : CommonGear, IGear
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("The request failed with following error: {0}.", e);
+			Console.WriteLine($"The request failed with following error: {e}.");
 		}
 		return null;
 	}
@@ -886,7 +886,7 @@ public class GitHubGear : CommonGear, IGear
 		{
 			foreach(var e in gqlResponse.Errors)
 			{
-				Console.WriteLine("GraphQL error: ${e.Message}");
+				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
 		}
 		return null;
@@ -946,7 +946,7 @@ public class GitHubGear : CommonGear, IGear
 		{
 			foreach(var e in gqlResponse.Errors)
 			{
-				Console.WriteLine("GraphQL error: ${e.Message}");
+				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
 		}
 
