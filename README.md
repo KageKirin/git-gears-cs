@@ -50,14 +50,20 @@ in a smooth mechanical system.
 - git integration with libgit2 works, config can be read.
 - GitHub proof-of-concept GraphQL connection works
 - GitLab proof-of-concept GraphQL connection works
-- GitHub `get-` and `list-` actions work, but only on the enterprise instance I use for testing.
-- GitLab `get-` and `list-` actions except `pullrequests` work, but slightly different from their GitHub counterparts.
+- GitHub `get-` and `list-` actions work.
+- GitLab `get-` and `list-` actions work, but slightly different from their GitHub counterparts.
+- `create-issue` works for GitHub and GitLab
+- `create-pullrequest` works for GitHub and GitLab, although **limited** to a single repository.
+  (I.e. cross-repo-PRs (e.g. fork to upstream) are not supported yet).
+- `create-gist` works for GitHub and GitLab. GitLab has the option to add _snippets_ to repos as well.
+- `create-repo` works for GitHub and GitLab, for the user's own namespace and optionally for organizations as well.
+  YMMV depending on your token scope. (TODO: document which scope is required per feature).
 
 ## Planned features
 
 - GitHub support
 - GitLab support
-- atm, support for other hosting services is not planned. I take pull requests (e.g. for BitBucket).
+- atm, support for other hosting services is not planned. I take pull requests (e.g. for BitBucket, Gogs etc).
 - pull requests:
   - `git gears create-pullrequest`
   - `git gears close-pullrequest`
@@ -83,6 +89,11 @@ in a smooth mechanical system.
   - `git gears get-repo`
   - `git gears list-repos`
   - `git gears fork-repo`
+- `--browser` option:
+  - open in browser?
+  - or open a local small browser window?
+  - or Shell-browser (Lynx)?
+- displaying issue/pr/gist discussions in the shell.
 
 ## Configuration
 
