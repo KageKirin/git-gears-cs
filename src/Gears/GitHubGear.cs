@@ -631,61 +631,69 @@ public class GitHubGear : CommonGear, IGear
 
 	public RepoInfo? CreateRepo(CreateRepoParams p)
 	{
-		// clang-format off
-		var gqlRequest = new GraphQLRequest{
-			Query = @"
-			mutation($_mutationId: String!,
-					 $_name: String!,
-					 $_visibility: RepositoryVisibility!,
-					 $_description: String,
-					 $_homepageUrl: URI)
-			{
-				createRepository(input: {
-					clientMutationId: $_mutationId,
-					name: $_name,
-					visibility: $_visibility,
-					description: $_description,
-					homepageUrl: $_homepageUrl,
-				})
+		var owner = GetOwner(RepoUrl.Owner);
+		if (owner.HasValue)
+		{
+			Console.WriteLine($"owner: {owner.Value.Name} ({owner.Value.Id})");
+			// clang-format off
+			var gqlRequest = new GraphQLRequest{
+				Query = @"
+				mutation($_mutationId: String!,
+						 $_ownerId: ID!,
+						 $_name: String!,
+						 $_visibility: RepositoryVisibility!,
+						 $_description: String,
+						 $_homepageUrl: URI)
 				{
-					clientMutationId,
-					repository
+					createRepository(input: {
+						clientMutationId: $_mutationId,
+						ownerId: $_ownerId,
+						name: $_name,
+						visibility: $_visibility,
+						description: $_description,
+						homepageUrl: $_homepageUrl,
+					})
 					{
-						id,
-						url,
-						name,
-						description,
-						homepage,
-						nameWithOwner,
-						createdAt,
-						pushedAt,
+						clientMutationId,
+						repository
+						{
+							id,
+							url,
+							name,
+							description,
+							homepageUrl,
+							nameWithOwner,
+							createdAt,
+							pushedAt,
+						}
 					}
+				}",
+				Variables = new {
+					_mutationId = Guid.NewGuid().ToString(),
+					_ownerId = owner.Value.Id,
+					_name = this.RepoUrl.RepoName,
+					_visibility = p.isPublic ? "PUBLIC" : "PRIVATE",
+					_description = p.description,
+					_homepageUrl = p.homepage,
 				}
-			}",
-			Variables = new {
-				_mutationId = Guid.NewGuid().ToString(),
-				_name = this.RepoUrl.RepoName,
-				_visibility = p.isPublic ? "PUBLIC" : "PRIVATE",
-				_description = p.description,
-				_homepageUrl = p.homepage,
-			}
-		};
-		// clang-format on
-		Console.WriteLine($"{gqlRequest.Query}");
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
-		if (gqlResponse.Data != null && gqlResponse.Data.createRepository != null)
-		{
-			Console.WriteLine($"{gqlResponse.Data.ToString()}");
-			if (gqlResponse.Data.createRepository.repository != null)
+			};
+			// clang-format on
+			Console.WriteLine($"{gqlRequest.Query}");
+			GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+			if (gqlResponse.Data != null && gqlResponse.Data.createRepository != null)
 			{
-				return ToRepoInfo(gqlResponse.Data.createRepository.repository);
+				Console.WriteLine($"{gqlResponse.Data.ToString()}");
+				if (gqlResponse.Data.createRepository.repository != null)
+				{
+					return ToRepoInfo(gqlResponse.Data.createRepository.repository);
+				}
 			}
-		}
-		else if (gqlResponse.Errors != null)
-		{
-			foreach(var e in gqlResponse.Errors)
+			else if (gqlResponse.Errors != null)
 			{
-				Console.WriteLine($"GraphQL error: {e.Message}");
+				foreach(var e in gqlResponse.Errors)
+				{
+					Console.WriteLine($"GraphQL error: {e.Message}");
+				}
 			}
 		}
 		return null;
