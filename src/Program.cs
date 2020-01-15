@@ -23,6 +23,7 @@ class Program
 				ListPullRequestsOptions,  //
 				ListReposOptions,		  //
 				GetUserOptions,			  //
+				GetOwnerOptions,		  //
 				TestOptions				  //
 				>(args)
 			.MapResult(																//
@@ -39,6 +40,7 @@ class Program
 				(ListPullRequestsOptions opts) => ListPullRequests.Execute(opts),	//
 				(ListReposOptions opts) => ListRepos.Execute(opts),					//
 				(GetUserOptions opts) => GetUser.Execute(opts),						//
+				(GetOwnerOptions opts) => GetOwner.Execute(opts),					//
 				(TestOptions opts) => Test.Execute(opts),							//
 				(errs) => 1);
 	}
