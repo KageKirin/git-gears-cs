@@ -24,6 +24,7 @@ class Program
 				ListReposOptions,		  //
 				GetUserOptions,			  //
 				GetOwnerOptions,		  //
+				GetOrganizationOptions,		  //
 				TestOptions				  //
 				>(args)
 			.MapResult(																//
@@ -41,6 +42,7 @@ class Program
 				(ListReposOptions opts) => ListRepos.Execute(opts),					//
 				(GetUserOptions opts) => GetUser.Execute(opts),						//
 				(GetOwnerOptions opts) => GetOwner.Execute(opts),					//
+				(GetOrganizationOptions opts) => GetOrganization.Execute(opts),		//
 				(TestOptions opts) => Test.Execute(opts),							//
 				(errs) => 1);
 	}
