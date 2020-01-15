@@ -24,7 +24,7 @@ class Program
 				ListReposOptions,		  //
 				GetUserOptions,			  //
 				GetOwnerOptions,		  //
-				GetOrganizationOptions,		  //
+				GetOrganizationOptions,	  //
 				TestOptions				  //
 				>(args)
 			.MapResult(																//
