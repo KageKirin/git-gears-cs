@@ -22,6 +22,7 @@ class Program
 				ListIssuesOptions,		  //
 				ListPullRequestsOptions,  //
 				ListReposOptions,		  //
+				GetUserOptions,			  //
 				TestOptions				  //
 				>(args)
 			.MapResult(																//
@@ -36,8 +37,9 @@ class Program
 				(ListGistsOptions opts) => ListGists.Execute(opts),					//
 				(ListIssuesOptions opts) => ListIssues.Execute(opts),				//
 				(ListPullRequestsOptions opts) => ListPullRequests.Execute(opts),	//
-				(TestOptions opts) => Test.Execute(opts),							//
 				(ListReposOptions opts) => ListRepos.Execute(opts),					//
+				(GetUserOptions opts) => GetUser.Execute(opts),						//
+				(TestOptions opts) => Test.Execute(opts),							//
 				(errs) => 1);
 	}
 }
