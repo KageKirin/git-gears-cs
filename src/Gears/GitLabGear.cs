@@ -534,30 +534,35 @@ public class GitLabGear : CommonGear, IGear
 
 	public RepoInfo? CreateRepo(CreateRepoParams p)
 	{
-		try
+		var owner = GetOwner(RepoUrl.Owner);
+		if (owner.HasValue)
 		{
-			var rstResponse = JObject.Parse(RestEndpoint.WithClient(FlurlClient)
-												.AppendPathSegments("projects")
-												.PostJsonAsync(new {
-													name = this.RepoUrl.RepoName,
-													// path = this.RepoUrl.Path,
-													description = $"{p.description}\n{p.homepage}",
-													visibility = p.isPublic ? "public" : "private",
-													// good defaults
-													lfs_enabled = true, // or check whether LFS enabled in local repo
-													remove_source_branch_after_merge = true,
-													autoclose_referenced_issues = true,
-												})
-												.Result.Content.ReadAsStringAsync()
-												.Result);
-			if (rstResponse != null)
+			try
 			{
-				return ToRepoInfo(rstResponse);
+				var rstResponse =
+					JObject.Parse(RestEndpoint.WithClient(FlurlClient)
+									  .AppendPathSegments("projects")
+									  .PostJsonAsync(new {
+										  name = this.RepoUrl.RepoName,
+										  namespace_id = owner.Value.Id,
+										  description = $"{p.description}\n{p.homepage}",
+										  visibility = p.isPublic ? "public" : "private",
+										  // good defaults
+										  lfs_enabled = true, // or check whether LFS enabled in local repo
+										  remove_source_branch_after_merge = true,
+										  autoclose_referenced_issues = true,
+									  })
+									  .Result.Content.ReadAsStringAsync()
+									  .Result);
+				if (rstResponse != null)
+				{
+					return ToRepoInfo(rstResponse);
+				}
 			}
-		}
-		catch (Exception e)
-		{
-			Console.WriteLine($"The request failed with following error: {e}.");
+			catch (Exception e)
+			{
+				Console.WriteLine($"The request failed with following error: {e}.");
+			}
 		}
 
 		return null;
