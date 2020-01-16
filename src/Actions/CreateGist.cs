@@ -6,7 +6,7 @@ public class CreateGist : BaseAction
 {
 	public static int Execute(CreateGistOptions opts)
 	{
-		SanitizeOptions((CommonOptions)opts);
+		SanitizeOptions((CommonOptions) opts);
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
 		var gear = GearFactory.CreateGear(opts.Remote);

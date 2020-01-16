@@ -6,7 +6,7 @@ public class GetUser : BaseAction
 {
 	public static int Execute(GetUserOptions opts)
 	{
-		SanitizeOptions((CommonOptions)opts);
+		SanitizeOptions((CommonOptions) opts);
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
 		var gear = GearFactory.CreateGear(opts.Remote);
@@ -20,7 +20,8 @@ public class GetUser : BaseAction
 			if (user.HasValue)
 			{
 				Console.WriteLine($"Owning user for {opts.Remote}");
-				Console.WriteLine($"{user.Value.Name} -- {user.Value.Login} -- {user.Value.Url} -- {user.Value.Website}");
+				Console.WriteLine(
+					$"{user.Value.Name} -- {user.Value.Login} -- {user.Value.Url} -- {user.Value.Website}");
 			}
 			else
 			{

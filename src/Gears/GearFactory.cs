@@ -10,6 +10,7 @@ public static class GearFactory
 	{
 		remote = remote ?? "origin";
 		GitUtils.GearsApiType api = GitUtils.GetGearsApiType(remote);
+		Console.WriteLine($"CreateGear: {remote} --> api: {api}");
 
 		switch (api)
 		{

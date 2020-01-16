@@ -6,7 +6,7 @@ public class GetOrganization : BaseAction
 {
 	public static int Execute(GetOrganizationOptions opts)
 	{
-		SanitizeOptions((CommonOptions)opts);
+		SanitizeOptions((CommonOptions) opts);
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
 		var gear = GearFactory.CreateGear(opts.Remote);
@@ -20,7 +20,8 @@ public class GetOrganization : BaseAction
 			if (org.HasValue)
 			{
 				Console.WriteLine($"Owning organization for {opts.Remote}");
-				Console.WriteLine($"{org.Value.Name} -- {org.Value.Description} -- {org.Value.Url} -- {org.Value.Website}");
+				Console.WriteLine(
+					$"{org.Value.Name} -- {org.Value.Description} -- {org.Value.Url} -- {org.Value.Website}");
 			}
 			else
 			{

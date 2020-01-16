@@ -44,7 +44,8 @@ class GitUtils
 
 	public static string GetCurrentRemote()
 	{
-		using(var repo = new Repository(FindCurrentRepoPath()))
+		string repoPath = FindCurrentRepoPath();
+		using(var repo = (repoPath != null) ? new Repository(repoPath) : new Repository())
 		{
 			if (repo.Head.RemoteName != null)
 				return repo.Head.RemoteName;
@@ -58,7 +59,13 @@ class GitUtils
 
 	public static string GetCurrentBranch()
 	{
-		using(var repo = new Repository(FindCurrentRepoPath()))
+		string repoPath = FindCurrentRepoPath();
+		if (repoPath == null)
+		{
+			return null;
+		}
+
+		using(var repo = new Repository(repoPath))
 		{
 			return repo.Head.FriendlyName;
 		}
@@ -70,21 +77,48 @@ class GitUtils
 	/// </summary>
 	/// <returns>value of key or null</returns>
 
-	public static string GetConfigEntry(string key)
+	public static string GetConfigEntry(string key, bool checkLocalConfig = true)
 	{
-		using(var repo = new Repository(FindCurrentRepoPath()))
+		string repoPath = FindCurrentRepoPath();
+		using(var repo = (repoPath != null) ? new Repository(repoPath) : new Repository())
 		{
+			Console.WriteLine($"repo: {repo != null}");
 			foreach(var configLevel in Enum.GetValues(typeof (ConfigurationLevel)).Cast<ConfigurationLevel>().Reverse())
 			{
+				Console.WriteLine($"checking {configLevel}");
+				// skip local config when told so
+				if (configLevel == ConfigurationLevel.Local && !checkLocalConfig)
+					continue;
+
 				if (repo.Config.HasConfig(configLevel))
 				{
+					Console.WriteLine("has config");
 					foreach(var entry in repo.Config.Find(key, configLevel))
 					{
+						Console.WriteLine($"{entry}");
 						return entry.Value;
 					}
 				}
+				else
+				{
+					Console.WriteLine("NO config");
+				}
 			}
 		}
+
+		using(var repo = new Repository())
+		{
+			if (repo.Config.HasConfig(ConfigurationLevel.Global))
+			{
+				foreach(var entry in repo.Config.Find(key, ConfigurationLevel.Global))
+				{
+					Console.WriteLine($"{entry}");
+					return entry.Value;
+				}
+			}
+		}
+
+
 		return null;
 	}
 
@@ -99,10 +133,24 @@ class GitUtils
 	/// <returns>value of key or null</returns>
 	public static string GetGearsConfigEntry(string key, string remoteName)
 	{
+		Console.WriteLine($"GetGearsConfigEntry({key}, {remoteName})");
 		remoteName = remoteName ?? GetCurrentRemote();
+		Console.WriteLine($"{GitUrl.IsUrl(remoteName)}");
+
+		if (GitUrl.IsUrl(remoteName))
+		{
+			var url = new GitUrl(remoteName);
+			var gearsKey = $"gears.{url.Host}.{key}";
+
+			var value = GetConfigEntry(gearsKey, false);
+			Console.WriteLine($"retrieved {value} for {url} {gearsKey}");
+			return value;
+		}
+		
+
 		using(var repo = new Repository(FindCurrentRepoPath()))
 		{
-			var url = GitUrl.IsUrl(remoteName) ? new GitUrl(remoteName) : new GitUrl(repo.Network.Remotes[remoteName].Url);
+			var url = new GitUrl(repo.Network.Remotes[remoteName].Url);
 			var gearsKey = $"gears.{url.Host}.{key}";
 
 			return GetConfigEntry(gearsKey);
@@ -186,6 +234,7 @@ class GitUtils
 	/// <returns>value of key or Invalid</returns>
 	public static GearsApiType GetGearsApiType(string remoteName)
 	{
+		Console.WriteLine($"GetGearsApiType: {remoteName}");
 		const bool ignoreCase = true;
 		try
 		{
@@ -199,10 +248,12 @@ class GitUtils
 
 	static public GitUrl GetRemoteUrl(string remote)
 	{
-		using(var repo = new Repository(FindCurrentRepoPath()))
+		if (GitUrl.IsUrl(remote))
+			return new GitUrl(remote);
+
+		string repoPath = FindCurrentRepoPath();
+		using(var repo = (repoPath != null) ? new Repository(repoPath) : new Repository())
 		{
-			if (GitUrl.IsUrl(remote))
-				return new GitUrl(remote);
 			var repoRemote = repo.Network.Remotes[remote];
 			if (repoRemote != null)
 				return new GitUrl(repoRemote.Url);
@@ -218,7 +269,8 @@ class GitUtils
 	/// testing function
 	public static void TestPrintInfo()
 	{
-		using(var repo = new Repository(FindCurrentRepoPath()))
+		string repoPath = FindCurrentRepoPath();
+		using(var repo = (repoPath != null) ? new Repository(repoPath) : new Repository())
 		{
 			foreach(var r in repo.Network.Remotes)
 			{
@@ -241,7 +293,8 @@ class GitUtils
 
 	public static void TestPrintConfig()
 	{
-		using(var repo = new Repository(FindCurrentRepoPath()))
+		string repoPath = FindCurrentRepoPath();
+		using(var repo = (repoPath != null) ? new Repository(repoPath) : new Repository())
 		{
 			Console.WriteLine(repo.Config.HasConfig(ConfigurationLevel.System));
 			Console.WriteLine(repo.Config.HasConfig(ConfigurationLevel.Global));
