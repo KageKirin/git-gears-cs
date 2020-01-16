@@ -25,9 +25,10 @@ public class CreatePullRequestOptions : CommonCreateOptions
 		set;
 	}
 
-	[Option("into", Required = true,
+	[Option("into", Required = false,
 			HelpText = @"target 'branch' or 'repo:branch' to merge into.
-			`repo` must be a known remote")]
+			`repo` must be a known remote",
+			Default = "master")]
 	public string TargetBranch
 	{
 		get;
