@@ -102,7 +102,7 @@ class GitUtils
 		remoteName = remoteName ?? GetCurrentRemote();
 		using(var repo = new Repository(FindCurrentRepoPath()))
 		{
-			var url = new GitUrl(repo.Network.Remotes[remoteName].Url);
+			var url = GitUrl.IsUrl(remoteName) ? new GitUrl(remoteName) : new GitUrl(repo.Network.Remotes[remoteName].Url);
 			var gearsKey = $"gears.{url.Host}.{key}";
 
 			return GetConfigEntry(gearsKey);
@@ -201,6 +201,8 @@ class GitUtils
 	{
 		using(var repo = new Repository(FindCurrentRepoPath()))
 		{
+			if (GitUrl.IsUrl(remote))
+				return new GitUrl(remote);
 			var repoRemote = repo.Network.Remotes[remote];
 			if (repoRemote != null)
 				return new GitUrl(repoRemote.Url);
