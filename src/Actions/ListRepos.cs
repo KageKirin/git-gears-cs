@@ -2,7 +2,7 @@ using System;
 
 namespace git_gears
 {
-public class ListRepos
+public class ListRepos : BaseAction
 {
 	public static int Execute(ListReposOptions opts)
 	{

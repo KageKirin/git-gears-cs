@@ -2,7 +2,7 @@ using System;
 
 namespace git_gears
 {
-public class GetRepo
+public class GetRepo : BaseAction
 {
 	public static int Execute(GetRepoOptions opts)
 	{

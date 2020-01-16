@@ -2,7 +2,7 @@ using System;
 
 namespace git_gears
 {
-public class CreateRepo
+public class CreateRepo : BaseAction
 {
 	public static int Execute(CreateRepoOptions opts)
 	{

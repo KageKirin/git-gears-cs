@@ -2,7 +2,7 @@ using System;
 
 namespace git_gears
 {
-public class Test
+public class Test : BaseAction
 {
 	public static int Execute(TestOptions opts)
 	{

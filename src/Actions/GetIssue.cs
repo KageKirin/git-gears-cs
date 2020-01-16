@@ -2,7 +2,7 @@ using System;
 
 namespace git_gears
 {
-public class GetIssue
+public class GetIssue : BaseAction
 {
 	public static int Execute(GetIssueOptions opts)
 	{

@@ -2,7 +2,7 @@ using System;
 
 namespace git_gears
 {
-public class ListPullRequests
+public class ListPullRequests : BaseAction
 {
 	public static int Execute(ListPullRequestsOptions opts)
 	{

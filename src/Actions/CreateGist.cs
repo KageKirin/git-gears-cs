@@ -2,7 +2,7 @@ using System;
 
 namespace git_gears
 {
-public class CreateGist
+public class CreateGist : BaseAction
 {
 	public static int Execute(CreateGistOptions opts)
 	{

@@ -2,7 +2,7 @@ using System;
 
 namespace git_gears
 {
-public class GetPullRequest
+public class GetPullRequest : BaseAction
 {
 	public static int Execute(GetPullRequestOptions opts)
 	{

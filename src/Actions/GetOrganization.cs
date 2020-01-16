@@ -2,7 +2,7 @@ using System;
 
 namespace git_gears
 {
-public class GetOrganization
+public class GetOrganization : BaseAction
 {
 	public static int Execute(GetOrganizationOptions opts)
 	{

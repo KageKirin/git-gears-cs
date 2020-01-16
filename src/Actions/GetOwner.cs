@@ -2,7 +2,7 @@ using System;
 
 namespace git_gears
 {
-public class GetOwner
+public class GetOwner : BaseAction
 {
 	public static int Execute(GetOwnerOptions opts)
 	{

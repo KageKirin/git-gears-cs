@@ -2,7 +2,7 @@ using System;
 
 namespace git_gears
 {
-public class GetUser
+public class GetUser : BaseAction
 {
 	public static int Execute(GetUserOptions opts)
 	{

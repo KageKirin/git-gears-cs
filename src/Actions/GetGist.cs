@@ -2,7 +2,7 @@ using System;
 
 namespace git_gears
 {
-public class GetGist
+public class GetGist : BaseAction
 {
 	public static int Execute(GetGistOptions opts)
 	{
