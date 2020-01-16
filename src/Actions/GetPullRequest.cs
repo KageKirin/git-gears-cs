@@ -6,6 +6,7 @@ public class GetPullRequest : BaseAction
 {
 	public static int Execute(GetPullRequestOptions opts)
 	{
+		SanitizeOptions((CommonOptions)opts);
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
 		var gear = GearFactory.CreateGear(opts.Remote);

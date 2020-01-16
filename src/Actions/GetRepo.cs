@@ -6,6 +6,7 @@ public class GetRepo : BaseAction
 {
 	public static int Execute(GetRepoOptions opts)
 	{
+		SanitizeOptions((CommonOptions)opts);
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
 		var gear = GearFactory.CreateGear(opts.Remote);

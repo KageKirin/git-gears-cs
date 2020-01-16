@@ -6,6 +6,7 @@ public class GetIssue : BaseAction
 {
 	public static int Execute(GetIssueOptions opts)
 	{
+		SanitizeOptions((CommonOptions)opts);
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
 		var gear = GearFactory.CreateGear(opts.Remote);

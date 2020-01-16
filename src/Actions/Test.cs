@@ -6,6 +6,7 @@ public class Test : BaseAction
 {
 	public static int Execute(TestOptions opts)
 	{
+		SanitizeOptions((CommonOptions)opts);
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 		Console.WriteLine($"remote: {GitUtils.GetCurrentRemote()}");
 		Console.WriteLine($"branch: {GitUtils.GetCurrentBranch()}");
