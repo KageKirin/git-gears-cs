@@ -80,6 +80,19 @@ public class GitUrl
 				  RegexOptions.Compiled | RegexOptions.IgnoreCase),
 	};
 
+	public static bool IsUrl(string url)
+	{
+		foreach(var pattern in UrlSchemas)
+		{
+			Match match = pattern.Match(url);
+			if (match.Success)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public GitUrl(string url)
 	{
 		foreach(var pattern in UrlSchemas)
