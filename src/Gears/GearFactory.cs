@@ -8,6 +8,7 @@ public static class GearFactory
 {
 	static public IGear CreateGear(string remote)
 	{
+		remote = remote ?? "origin";
 		GitUtils.GearsApiType api = GitUtils.GetGearsApiType(remote);
 
 		switch (api)
