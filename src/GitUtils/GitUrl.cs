@@ -11,7 +11,7 @@ namespace git_gears
 /// </summary>
 public class GitUrl
 {
-	static private List<Regex>UrlSchemas = new List<Regex>(){
+	static private List<Regex> UrlSchemas = new List<Regex>(){
 		// generic patterns _adapted_ from git-url-parse (python)
 		new Regex(@"^(?<protocol>https?|git|ssh|rsync)\://" + //
 					  @"(?:(?<user>.+)@)*" +				  //
@@ -82,7 +82,7 @@ public class GitUrl
 
 	public GitUrl(string url)
 	{
-		foreach(var pattern in UrlSchemas)
+		foreach (var pattern in UrlSchemas)
 		{
 			Match match = pattern.Match(url);
 			if (match.Success)
