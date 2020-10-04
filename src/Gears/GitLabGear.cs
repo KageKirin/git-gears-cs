@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using GraphQL.Client;
 using GraphQL.Common.Request;
@@ -19,7 +20,7 @@ public class GitLabGear : CommonGear, IGear
 	{
 	}
 
-	public void Test()
+	public async Task TestAsync()
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -37,7 +38,7 @@ public class GitLabGear : CommonGear, IGear
 		// clang-format on
 		Console.WriteLine($"{gqlRequest.Query}");
 		// Console.WriteLine($"{gqlRequest.Variables}");
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		Console.WriteLine($"{gqlResponse.Data != null}");
 
 		if (gqlResponse.Data != null)
@@ -48,18 +49,17 @@ public class GitLabGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public UserInfo? GetUser(string login)
+	public async Task<UserInfo?> GetUserAsync(string login)
 	{
 		try
 		{
 			// search user -> id
-			var rstResponse = JArray.Parse(RestEndpoint.WithClient(FlurlClient)
+			var rstResponse = JArray.Parse(await RestEndpoint.WithClient(FlurlClient)
 											   .AppendPathSegments("users")
 											   .SetQueryParams(new {
 												   username = login,
 											   })
-											   .GetStringAsync()
-											   .Result);
+											   .GetStringAsync());
 			Console.WriteLine($"{rstResponse}");
 
 			if (rstResponse.Count > 0)
@@ -68,7 +68,7 @@ public class GitLabGear : CommonGear, IGear
 				string userId = $"{userData.id}";
 				// then get user data
 				var rstResponseUser = JObject.Parse(
-					RestEndpoint.WithClient(FlurlClient).AppendPathSegments("users", userId).GetStringAsync().Result);
+					await RestEndpoint.WithClient(FlurlClient).AppendPathSegments("users", userId).GetStringAsync());
 				Console.WriteLine($"{rstResponseUser}");
 				if (rstResponseUser != null)
 				{
@@ -98,14 +98,13 @@ public class GitLabGear : CommonGear, IGear
 		return userInfo;
 	}
 
-	public OrganizationInfo? GetOrganization(string login)
+	public async Task<OrganizationInfo?> GetOrganizationAsync(string login)
 	{
 		try
 		{
-			var rstResponse = JObject.Parse(RestEndpoint.WithClient(FlurlClient)
+			var rstResponse = JObject.Parse(await RestEndpoint.WithClient(FlurlClient)
 												.AppendPathSegments("groups", login) //
-												.GetStringAsync()
-												.Result);
+												.GetStringAsync());
 			Console.WriteLine($"{rstResponse}");
 			if (rstResponse != null)
 			{
@@ -133,14 +132,13 @@ public class GitLabGear : CommonGear, IGear
 		return orgInfo;
 	}
 
-	public OwnerInfo? GetOwner(string login)
+	public async Task<OwnerInfo?> GetOwnerAsync(string login)
 	{
 		try
 		{
-			var rstResponse = JObject.Parse(RestEndpoint.WithClient(FlurlClient)
+			var rstResponse = JObject.Parse(await RestEndpoint.WithClient(FlurlClient)
 												.AppendPathSegments("namespaces", login) //
-												.GetStringAsync()
-												.Result);
+												.GetStringAsync());
 			Console.WriteLine($"{rstResponse}");
 			if (rstResponse != null)
 			{
@@ -167,19 +165,18 @@ public class GitLabGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public IssueInfo? CreateIssue(CreateIssueParams p)
+	public async Task<IssueInfo?> CreateIssueAsync(CreateIssueParams p)
 	{
 		try
 		{
-			var rstResponse = JObject.Parse(RestEndpoint.WithClient(FlurlClient)
-												.AppendPathSegments("projects", GetRepoProjectId(), "issues")
-												.PostJsonAsync(new {
-													//
-													title = p.title,	 //
-													description = p.body //
-												})
-												.Result.Content.ReadAsStringAsync()
-												.Result);
+			var rstResponse = JObject.Parse(await(await RestEndpoint.WithClient(FlurlClient)
+													  .AppendPathSegments("projects", GetRepoProjectIdAsync(), "issues")
+													  .PostJsonAsync(new {
+														  //
+														  title = p.title,	   //
+														  description = p.body //
+													  }))
+												.Content.ReadAsStringAsync());
 			if (rstResponse != null)
 			{
 				return ToIssueInfo(rstResponse);
@@ -193,7 +190,7 @@ public class GitLabGear : CommonGear, IGear
 		return null;
 	}
 
-	public IssueInfo? GetIssue(int number)
+	public async Task<IssueInfo?> GetIssueAsync(int number)
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -220,7 +217,7 @@ public class GitLabGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -240,7 +237,7 @@ public class GitLabGear : CommonGear, IGear
 		return null;
 	}
 
-	public IEnumerable<IssueInfo>ListIssues()
+	public async Task<IEnumerable<IssueInfo>> ListIssuesAsync()
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -270,7 +267,7 @@ public class GitLabGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -309,20 +306,20 @@ public class GitLabGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public PullRequestInfo? CreatePullRequest(CreatePullRequestParams p)
+	public async Task<PullRequestInfo?> CreatePullRequestAsync(CreatePullRequestParams p)
 	{
 		try
 		{
-			var rstResponse = JObject.Parse(RestEndpoint.WithClient(FlurlClient)
-												.AppendPathSegments("projects", GetRepoProjectId(), "merge_requests")
-												.PostJsonAsync(new {
-													source_branch = p.branch,		//
-													target_branch = p.targetBranch, //
-													title = p.title,				//
-													description = p.body			//
-												})
-												.Result.Content.ReadAsStringAsync()
-												.Result);
+			var rstResponse =
+				JObject.Parse(await(await RestEndpoint.WithClient(FlurlClient)
+										.AppendPathSegments("projects", GetRepoProjectIdAsync(), "merge_requests")
+										.PostJsonAsync(new {
+											source_branch = p.branch,		//
+											target_branch = p.targetBranch, //
+											title = p.title,				//
+											description = p.body			//
+										}))
+								  .Content.ReadAsStringAsync());
 			if (rstResponse != null)
 			{
 				return ToPullRequestInfo(rstResponse);
@@ -336,7 +333,7 @@ public class GitLabGear : CommonGear, IGear
 		return null;
 	}
 
-	public PullRequestInfo? GetPullRequest(string branch)
+	public async Task<PullRequestInfo?> GetPullRequestAsync(string branch)
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -371,7 +368,7 @@ public class GitLabGear : CommonGear, IGear
 		};
 		// clang-format on
 		string project_id = null;
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -392,8 +389,8 @@ public class GitLabGear : CommonGear, IGear
 		}
 
 		// workaround
-		project_id = project_id ?? GetRepoProjectId();
-		var rstResponse = JArray.Parse(RestEndpoint.WithClient(FlurlClient)
+		project_id = project_id ?? await GetRepoProjectIdAsync();
+		var rstResponse = JArray.Parse(await RestEndpoint.WithClient(FlurlClient)
 										   .AppendPathSegments("projects", project_id, "merge_requests")
 										   .SetQueryParams(new {
 											   source_branch = branch,
@@ -401,8 +398,7 @@ public class GitLabGear : CommonGear, IGear
 											   order_by = "updated_at",
 											   sort = "desc",
 										   })
-										   .GetStringAsync()
-										   .Result);
+										   .GetStringAsync());
 
 		Console.WriteLine($"{rstResponse}");
 		if (rstResponse != null && rstResponse.Count > 0)
@@ -413,7 +409,7 @@ public class GitLabGear : CommonGear, IGear
 		return null;
 	}
 
-	public IEnumerable<PullRequestInfo>ListPullRequests()
+	public async Task<IEnumerable<PullRequestInfo>> ListPullRequestsAsync()
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -449,7 +445,7 @@ public class GitLabGear : CommonGear, IGear
 		// clang-format on
 		string project_id = null;
 		var list = new List<PullRequestInfo>();
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -474,16 +470,15 @@ public class GitLabGear : CommonGear, IGear
 		}
 
 		// workaround
-		project_id = project_id ?? GetRepoProjectId();
-		var rstResponse = JArray.Parse(RestEndpoint.WithClient(FlurlClient)
+		project_id = project_id ?? await GetRepoProjectIdAsync();
+		var rstResponse = JArray.Parse(await RestEndpoint.WithClient(FlurlClient)
 										   .AppendPathSegments("projects", project_id, "merge_requests")
 										   .SetQueryParams(new {
 											   max_results = 100,
 											   order_by = "updated_at",
 											   sort = "desc",
 										   })
-										   .GetStringAsync()
-										   .Result);
+										   .GetStringAsync());
 
 		Console.WriteLine($"{rstResponse}");
 		if (rstResponse != null && rstResponse.Count > 0)
@@ -521,9 +516,9 @@ public class GitLabGear : CommonGear, IGear
 		return Regex.Split(gid, @"gid://gitlab/Project/")[1];
 	}
 
-	private string GetRepoProjectId()
+	private async Task<string> GetRepoProjectIdAsync()
 	{
-		var repo = GetRepo();
+		var repo = await GetRepoAsync();
 		if (repo.HasValue)
 		{
 			return GetProjectIdFromGid(repo.Value.Id);
@@ -532,28 +527,25 @@ public class GitLabGear : CommonGear, IGear
 		return "";
 	}
 
-	public RepoInfo? CreateRepo(CreateRepoParams p)
+	public async Task<RepoInfo?> CreateRepoAsync(CreateRepoParams p)
 	{
-		var owner = GetOwner(RepoUrl.Owner);
+		var owner = await GetOwnerAsync(RepoUrl.Owner);
 		if (owner.HasValue)
 		{
 			try
 			{
-				var rstResponse =
-					JObject.Parse(RestEndpoint.WithClient(FlurlClient)
-									  .AppendPathSegments("projects")
-									  .PostJsonAsync(new {
-										  name = this.RepoUrl.RepoName,
-										  namespace_id = owner.Value.Id,
-										  description = $"{p.description}\n{p.homepage}",
-										  visibility = p.isPublic ? "public" : "private",
-										  // good defaults
-										  lfs_enabled = true, // or check whether LFS enabled in local repo
-										  remove_source_branch_after_merge = true,
-										  autoclose_referenced_issues = true,
-									  })
-									  .Result.Content.ReadAsStringAsync()
-									  .Result);
+				var rstResponse = JObject.Parse(
+					await(await RestEndpoint.WithClient(FlurlClient).AppendPathSegments("projects").PostJsonAsync(new {
+						name = this.RepoUrl.RepoName,
+						namespace_id = owner.Value.Id,
+						description = $"{p.description}\n{p.homepage}",
+						visibility = p.isPublic ? "public" : "private",
+						// good defaults
+						lfs_enabled = true, // or check whether LFS enabled in local repo
+						remove_source_branch_after_merge = true,
+						autoclose_referenced_issues = true,
+					}))
+						.Content.ReadAsStringAsync());
 				if (rstResponse != null)
 				{
 					return ToRepoInfo(rstResponse);
@@ -568,7 +560,7 @@ public class GitLabGear : CommonGear, IGear
 		return null;
 	}
 
-	public RepoInfo? GetRepo()
+	public async Task<RepoInfo?> GetRepoAsync()
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -591,7 +583,7 @@ public class GitLabGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		Console.WriteLine($"{gqlResponse.Data != null}");
 		if (gqlResponse.Data != null && gqlResponse.Data.project != null)
 		{
@@ -609,7 +601,7 @@ public class GitLabGear : CommonGear, IGear
 		return null;
 	}
 
-	public IEnumerable<RepoInfo>ListRepos()
+	public async Task<IEnumerable<RepoInfo>> ListReposAsync()
 	{
 		// TODO: count first, then query while iterating to get full count
 		// clang-format off
@@ -640,7 +632,7 @@ public class GitLabGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -680,7 +672,7 @@ public class GitLabGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public GistInfo? CreateGist(CreateGistParams p)
+	public async Task<GistInfo?> CreateGistAsync(CreateGistParams p)
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -722,7 +714,7 @@ public class GitLabGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -742,7 +734,7 @@ public class GitLabGear : CommonGear, IGear
 		return null;
 	}
 
-	public GistInfo? GetGist(string name)
+	public async Task<GistInfo?> GetGistAsync(string name)
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -773,7 +765,7 @@ public class GitLabGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		Console.WriteLine($"{gqlResponse.Data != null}");
 		if (gqlResponse.Data != null)
 		{
@@ -791,7 +783,7 @@ public class GitLabGear : CommonGear, IGear
 		return null;
 	}
 
-	public IEnumerable<GistInfo>ListGists()
+	public async Task<IEnumerable<GistInfo>> ListGistsAsync()
 	{
 		// TODO: count first, then query while iterating to get full count
 		// clang-format off
@@ -823,7 +815,7 @@ public class GitLabGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
