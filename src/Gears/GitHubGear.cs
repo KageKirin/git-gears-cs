@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using GraphQL.Client;
 using GraphQL.Common.Request;
 using GraphQL.Common.Response;
@@ -20,7 +21,7 @@ public class GitHubGear : CommonGear, IGear
 		FlurlClient.HttpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
 	}
 
-	public void Test()
+	public async Task TestAsync()
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -37,7 +38,7 @@ public class GitHubGear : CommonGear, IGear
 		// clang-format on
 		Console.WriteLine($"{gqlRequest.Query}");
 		// Console.WriteLine($"{gqlRequest.Variables}");
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		Console.WriteLine($"{gqlResponse.Data != null}");
 
 		if (gqlResponse.Data != null)
@@ -55,7 +56,7 @@ public class GitHubGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public UserInfo? GetUser(string login)
+	public async Task<UserInfo?> GetUserAsync(string login)
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -82,7 +83,7 @@ public class GitHubGear : CommonGear, IGear
 		// clang-format on
 		Console.WriteLine($"{gqlRequest.Query}");
 		// Console.WriteLine($"{gqlRequest.Variables}");
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		Console.WriteLine($"{gqlResponse.Data != null}");
 
 		if (gqlResponse.Data != null)
@@ -115,7 +116,7 @@ public class GitHubGear : CommonGear, IGear
 		return userInfo;
 	}
 
-	public OrganizationInfo? GetOrganization(string login)
+	public async Task<OrganizationInfo?> GetOrganizationAsync(string login)
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -142,7 +143,7 @@ public class GitHubGear : CommonGear, IGear
 		// clang-format on
 		Console.WriteLine($"{gqlRequest.Query}");
 		// Console.WriteLine($"{gqlRequest.Variables}");
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		Console.WriteLine($"{gqlResponse.Data != null}");
 
 		if (gqlResponse.Data != null && gqlResponse.Data.organization != null)
@@ -174,7 +175,7 @@ public class GitHubGear : CommonGear, IGear
 		return orgInfo;
 	}
 
-	public OwnerInfo? GetOwner(string login)
+	public async Task<OwnerInfo?> GetOwnerAsync(string login)
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -205,7 +206,7 @@ public class GitHubGear : CommonGear, IGear
 		// clang-format on
 		Console.WriteLine($"{gqlRequest.Query}");
 		// Console.WriteLine($"{gqlRequest.Variables}");
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		Console.WriteLine($"{gqlResponse.Data != null}");
 
 		if (gqlResponse.Data != null && (gqlResponse.Data.organization != null || gqlResponse.Data.user != null))
@@ -246,9 +247,9 @@ public class GitHubGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public IssueInfo? CreateIssue(CreateIssueParams p)
+	public async Task<IssueInfo?> CreateIssueAsync(CreateIssueParams p)
 	{
-		var repo = GetRepo();
+		var repo = await GetRepoAsync();
 		if (repo.HasValue)
 		{
 			// clang-format off
@@ -282,7 +283,7 @@ public class GitHubGear : CommonGear, IGear
 				}
 			};
 			// clang-format on
-			GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+			GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 			if (gqlResponse.Data != null)
 			{
 				Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -302,7 +303,7 @@ public class GitHubGear : CommonGear, IGear
 		return null;
 	}
 
-	public IssueInfo? GetIssue(int number)
+	public async Task<IssueInfo?> GetIssueAsync(int number)
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -331,7 +332,7 @@ public class GitHubGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -351,7 +352,7 @@ public class GitHubGear : CommonGear, IGear
 		return null;
 	}
 
-	public IEnumerable<IssueInfo>ListIssues()
+	public async Task<IEnumerable<IssueInfo>> ListIssuesAsync()
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -383,7 +384,7 @@ public class GitHubGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -422,9 +423,9 @@ public class GitHubGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public PullRequestInfo? CreatePullRequest(CreatePullRequestParams p)
+	public async Task<PullRequestInfo?> CreatePullRequestAsync(CreatePullRequestParams p)
 	{
-		var repo = GetRepo();
+		var repo = await GetRepoAsync();
 		if (repo.HasValue)
 		{
 			// clang-format off
@@ -471,7 +472,7 @@ public class GitHubGear : CommonGear, IGear
 				}
 			};
 			// clang-format on
-			GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+			GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 			if (gqlResponse.Data != null)
 			{
 				Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -491,7 +492,7 @@ public class GitHubGear : CommonGear, IGear
 		return null;
 	}
 
-	public PullRequestInfo? GetPullRequest(string branch)
+	public async Task<PullRequestInfo?> GetPullRequestAsync(string branch)
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -527,7 +528,7 @@ public class GitHubGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -548,7 +549,7 @@ public class GitHubGear : CommonGear, IGear
 		return null;
 	}
 
-	public IEnumerable<PullRequestInfo>ListPullRequests()
+	public async Task<IEnumerable<PullRequestInfo>> ListPullRequestsAsync()
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -584,7 +585,7 @@ public class GitHubGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -629,9 +630,9 @@ public class GitHubGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public RepoInfo? CreateRepo(CreateRepoParams p)
+	public async Task<RepoInfo?> CreateRepoAsync(CreateRepoParams p)
 	{
-		var owner = GetOwner(RepoUrl.Owner);
+		var owner = await GetOwnerAsync(RepoUrl.Owner);
 		if (owner.HasValue)
 		{
 			Console.WriteLine($"owner: {owner.Value.Name} ({owner.Value.Id})");
@@ -679,7 +680,7 @@ public class GitHubGear : CommonGear, IGear
 			};
 			// clang-format on
 			Console.WriteLine($"{gqlRequest.Query}");
-			GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+			GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 			if (gqlResponse.Data != null && gqlResponse.Data.createRepository != null)
 			{
 				Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -699,7 +700,7 @@ public class GitHubGear : CommonGear, IGear
 		return null;
 	}
 
-	public RepoInfo? GetRepo()
+	public async Task<RepoInfo?> GetRepoAsync()
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -724,7 +725,7 @@ public class GitHubGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -740,7 +741,7 @@ public class GitHubGear : CommonGear, IGear
 		return null;
 	}
 
-	public IEnumerable<RepoInfo>ListRepos()
+	public async Task<IEnumerable<RepoInfo>> ListReposAsync()
 	{
 		// TODO: count first, then query while iterating to get full count
 		// clang-format off
@@ -772,7 +773,7 @@ public class GitHubGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");
@@ -813,7 +814,7 @@ public class GitHubGear : CommonGear, IGear
 
 	///////////////////////////////////////////////////////////////////////////
 
-	public GistInfo? CreateGist(CreateGistParams p)
+	public async Task<GistInfo?> CreateGistAsync(CreateGistParams p)
 	{
 		try
 		{
@@ -834,11 +835,10 @@ public class GitHubGear : CommonGear, IGear
 						   + @" }"														   //
 						   + @"}";														   //
 			// clang-format on
-			dynamic rstResponse = JObject.Parse(RestEndpoint.WithClient(FlurlClient)
-													.AppendPathSegments("gists")
-													.PostJsonAsync((object) JObject.Parse(query))
-													.Result.Content.ReadAsStringAsync()
-													.Result);
+			dynamic rstResponse = JObject.Parse(await(await RestEndpoint.WithClient(FlurlClient)
+														  .AppendPathSegments("gists")
+														  .PostJsonAsync((object) JObject.Parse(query)))
+													.Content.ReadAsStringAsync());
 			if (rstResponse != null)
 			{
 				rstResponse.url = rstResponse.html_url;
@@ -852,7 +852,7 @@ public class GitHubGear : CommonGear, IGear
 		return null;
 	}
 
-	public GistInfo? GetGist(string name)
+	public async Task<GistInfo?> GetGistAsync(string name)
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -882,7 +882,7 @@ public class GitHubGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		if (gqlResponse.Data != null)
 		{
 			gqlResponse.Data.user.gist.url =
@@ -900,7 +900,7 @@ public class GitHubGear : CommonGear, IGear
 		return null;
 	}
 
-	public IEnumerable<GistInfo>ListGists()
+	public async Task<IEnumerable<GistInfo>> ListGistsAsync()
 	{
 		// clang-format off
 		var gqlRequest = new GraphQLRequest{
@@ -933,7 +933,7 @@ public class GitHubGear : CommonGear, IGear
 			}
 		};
 		// clang-format on
-		GraphQLResponse gqlResponse = GqlClient.PostAsync(gqlRequest).Result;
+		GraphQLResponse gqlResponse = await GqlClient.PostAsync(gqlRequest);
 		if (gqlResponse.Data != null)
 		{
 			Console.WriteLine($"{gqlResponse.Data.ToString()}");

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace git_gears
 {
@@ -73,25 +74,25 @@ public struct CreateRepoParams
 
 public interface IGear
 {
-	void Test();
+	Task TestAsync();
 
-	UserInfo? GetUser(string login);
-	OrganizationInfo? GetOrganization(string login);
-	OwnerInfo? GetOwner(string login);
+	Task<UserInfo?> GetUserAsync(string login);
+	Task<OrganizationInfo?> GetOrganizationAsync(string login);
+	Task<OwnerInfo?> GetOwnerAsync(string login);
 
-	GistInfo? GetGist(string name);					//! TODO: params
-	IssueInfo? GetIssue(int number);				//! TODO: params
-	PullRequestInfo? GetPullRequest(string branch); //! TODO: params
-	RepoInfo? GetRepo();							//! TODO: params
+	Task<GistInfo?> GetGistAsync(string name);				   //! TODO: params
+	Task<IssueInfo?> GetIssueAsync(int number);				   //! TODO: params
+	Task<PullRequestInfo?> GetPullRequestAsync(string branch); //! TODO: params
+	Task<RepoInfo?> GetRepoAsync();							   //! TODO: params
 
-	IEnumerable<GistInfo>ListGists();				//! TODO: params + filter params
-	IEnumerable<IssueInfo>ListIssues();				//! TODO: params + filter params
-	IEnumerable<PullRequestInfo>ListPullRequests(); //! TODO: params + filter params
-	IEnumerable<RepoInfo>ListRepos();				//! TODO: params + filter params
+	Task<IEnumerable<GistInfo>> ListGistsAsync();				//! TODO: params + filter params
+	Task<IEnumerable<IssueInfo>> ListIssuesAsync();				//! TODO: params + filter params
+	Task<IEnumerable<PullRequestInfo>> ListPullRequestsAsync(); //! TODO: params + filter params
+	Task<IEnumerable<RepoInfo>> ListReposAsync();				//! TODO: params + filter params
 
-	GistInfo? CreateGist(CreateGistParams p);
-	IssueInfo? CreateIssue(CreateIssueParams p);
-	PullRequestInfo? CreatePullRequest(CreatePullRequestParams p);
-	RepoInfo? CreateRepo(CreateRepoParams p);
+	Task<GistInfo?> CreateGistAsync(CreateGistParams p);
+	Task<IssueInfo?> CreateIssueAsync(CreateIssueParams p);
+	Task<PullRequestInfo?> CreatePullRequestAsync(CreatePullRequestParams p);
+	Task<RepoInfo?> CreateRepoAsync(CreateRepoParams p);
 }
 }
