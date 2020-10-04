@@ -228,7 +228,7 @@ public class GitLabGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
@@ -275,7 +275,7 @@ public class GitLabGear : CommonGear, IGear
 			if (gqlResponse.Data.project.issues.nodes != null)
 			{
 				var list = new List<IssueInfo>();
-				foreach(var i in gqlResponse.Data.project.issues.nodes)
+				foreach (var i in gqlResponse.Data.project.issues.nodes)
 				{
 					list.Add(ToIssueInfo(i));
 				}
@@ -284,7 +284,7 @@ public class GitLabGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
@@ -382,7 +382,7 @@ public class GitLabGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
@@ -454,7 +454,7 @@ public class GitLabGear : CommonGear, IGear
 			if (gqlResponse.Data.project.mergeRequests.nodes != null &&
 				gqlResponse.Data.project.mergeRequests.nodes.Count > 0)
 			{
-				foreach(var n in gqlResponse.Data.project.mergeRequests.nodes)
+				foreach (var n in gqlResponse.Data.project.mergeRequests.nodes)
 				{
 					list.Add(ToPullRequestInfo(n));
 				}
@@ -463,7 +463,7 @@ public class GitLabGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
@@ -483,7 +483,7 @@ public class GitLabGear : CommonGear, IGear
 		Console.WriteLine($"{rstResponse}");
 		if (rstResponse != null && rstResponse.Count > 0)
 		{
-			foreach(var n in rstResponse)
+			foreach (var n in rstResponse)
 			{
 				list.Add(ToPullRequestInfo(n));
 			}
@@ -592,7 +592,7 @@ public class GitLabGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
@@ -640,7 +640,7 @@ public class GitLabGear : CommonGear, IGear
 
 			if (gqlResponse.Data["namespace"].projects.nodes != null)
 			{
-				foreach(var n in gqlResponse.Data["namespace"].projects.nodes)
+				foreach (var n in gqlResponse.Data["namespace"].projects.nodes)
 				{
 					list.Add(ToRepoInfo(n));
 				}
@@ -650,7 +650,7 @@ public class GitLabGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
@@ -725,7 +725,7 @@ public class GitLabGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
@@ -774,7 +774,7 @@ public class GitLabGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
@@ -823,7 +823,7 @@ public class GitLabGear : CommonGear, IGear
 
 			if (gqlResponse.Data["currentUser"].snippets.nodes != null)
 			{
-				foreach(var n in gqlResponse.Data["currentUser"].snippets.nodes)
+				foreach (var n in gqlResponse.Data["currentUser"].snippets.nodes)
 				{
 					list.Add(ToGistInfo(n));
 				}
@@ -833,7 +833,7 @@ public class GitLabGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}

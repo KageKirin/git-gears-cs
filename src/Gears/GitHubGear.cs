@@ -47,7 +47,7 @@ public class GitHubGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
@@ -93,7 +93,7 @@ public class GitHubGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null && gqlResponse.Data.user != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
@@ -153,7 +153,7 @@ public class GitHubGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
@@ -216,7 +216,7 @@ public class GitHubGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
@@ -294,7 +294,7 @@ public class GitHubGear : CommonGear, IGear
 			}
 			else
 			{
-				foreach(var e in gqlResponse.Errors)
+				foreach (var e in gqlResponse.Errors)
 				{
 					Console.WriteLine($"GraphQL error: {e.Message}");
 				}
@@ -343,7 +343,7 @@ public class GitHubGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
@@ -392,7 +392,7 @@ public class GitHubGear : CommonGear, IGear
 			if (gqlResponse.Data.repository.issues.nodes != null)
 			{
 				var list = new List<IssueInfo>();
-				foreach(var i in gqlResponse.Data.repository.issues.nodes)
+				foreach (var i in gqlResponse.Data.repository.issues.nodes)
 				{
 					list.Add(ToIssueInfo(i));
 				}
@@ -401,7 +401,7 @@ public class GitHubGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
@@ -483,7 +483,7 @@ public class GitHubGear : CommonGear, IGear
 			}
 			else
 			{
-				foreach(var e in gqlResponse.Errors)
+				foreach (var e in gqlResponse.Errors)
 				{
 					Console.WriteLine($"GraphQL error: {e.Message}");
 				}
@@ -540,7 +540,7 @@ public class GitHubGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
@@ -593,7 +593,7 @@ public class GitHubGear : CommonGear, IGear
 
 			if (gqlResponse.Data.repository.pullRequests.nodes != null)
 			{
-				foreach(var n in gqlResponse.Data.repository.pullRequests.nodes)
+				foreach (var n in gqlResponse.Data.repository.pullRequests.nodes)
 				{
 					list.Add(ToPullRequestInfo(n));
 				}
@@ -603,7 +603,7 @@ public class GitHubGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
@@ -691,7 +691,7 @@ public class GitHubGear : CommonGear, IGear
 			}
 			else if (gqlResponse.Errors != null)
 			{
-				foreach(var e in gqlResponse.Errors)
+				foreach (var e in gqlResponse.Errors)
 				{
 					Console.WriteLine($"GraphQL error: {e.Message}");
 				}
@@ -733,7 +733,7 @@ public class GitHubGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
@@ -781,7 +781,7 @@ public class GitHubGear : CommonGear, IGear
 
 			if (gqlResponse.Data.user.repositoriesContributedTo.nodes != null)
 			{
-				foreach(var n in gqlResponse.Data.user.repositoriesContributedTo.nodes)
+				foreach (var n in gqlResponse.Data.user.repositoriesContributedTo.nodes)
 				{
 					list.Add(ToRepoInfo(n));
 				}
@@ -791,7 +791,7 @@ public class GitHubGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
@@ -892,7 +892,7 @@ public class GitHubGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
@@ -941,7 +941,7 @@ public class GitHubGear : CommonGear, IGear
 
 			if (gqlResponse.Data.user.gists.nodes != null)
 			{
-				foreach(var n in gqlResponse.Data.user.gists.nodes)
+				foreach (var n in gqlResponse.Data.user.gists.nodes)
 				{
 					n.url = $"https://gist.{RepoUrl.Host}/{RepoUrl.Owner}/{n.name}";
 					list.Add(ToGistInfo(n));
@@ -952,7 +952,7 @@ public class GitHubGear : CommonGear, IGear
 		}
 		else if (gqlResponse.Errors != null)
 		{
-			foreach(var e in gqlResponse.Errors)
+			foreach (var e in gqlResponse.Errors)
 			{
 				Console.WriteLine($"GraphQL error: {e.Message}");
 			}
