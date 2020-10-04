@@ -1,10 +1,11 @@
 using System;
+using System.Threading.Tasks;
 
 namespace git_gears
 {
 public class GetOrganization
 {
-	public static int Execute(GetOrganizationOptions opts)
+	public static async Task<int> ExecuteAsync(GetOrganizationOptions opts)
 	{
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
@@ -15,7 +16,7 @@ public class GetOrganization
 
 		if (gear != null)
 		{
-			OrganizationInfo? org = gear.GetOrganization(url.Owner);
+			OrganizationInfo? org = await gear.GetOrganizationAsync(url.Owner);
 			if (org.HasValue)
 			{
 				Console.WriteLine($"Owning organization for {opts.Remote}");

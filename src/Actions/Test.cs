@@ -1,10 +1,11 @@
 using System;
+using System.Threading.Tasks;
 
 namespace git_gears
 {
 public class Test
 {
-	public static int Execute(TestOptions opts)
+	public static async Task<int> ExecuteAsync(TestOptions opts)
 	{
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 		Console.WriteLine($"remote: {GitUtils.GetCurrentRemote()}");
@@ -23,26 +24,26 @@ public class Test
 		if (gear != null)
 		{
 			Console.WriteLine("-- Test --");
-			gear.Test();
+			await gear.TestAsync();
 			Console.WriteLine("-- GetUser --");
-			Console.WriteLine($"{gear.GetUser(url.Owner)}");
+			Console.WriteLine($"{await gear.GetUserAsync(url.Owner)}");
 			Console.WriteLine("-- GetOwner --");
-			Console.WriteLine($"{gear.GetOwner(url.Owner)}");
+			Console.WriteLine($"{await gear.GetOwnerAsync(url.Owner)}");
 			Console.WriteLine("-- GetOrganization --");
-			Console.WriteLine($"{gear.GetOrganization(url.Owner)}");
+			Console.WriteLine($"{await gear.GetOrganizationAsync(url.Owner)}");
 
 			Console.WriteLine("-- GetRepo --");
-			Console.WriteLine($"{gear.GetRepo()}");
+			Console.WriteLine($"{await gear.GetRepoAsync()}");
 			Console.WriteLine("-- GetPullRequest --");
-			Console.WriteLine($"{gear.GetPullRequest(GitUtils.GetCurrentBranch())}");
+			Console.WriteLine($"{await gear.GetPullRequestAsync(GitUtils.GetCurrentBranch())}");
 			Console.WriteLine("-- ListPullRequests --");
-			Console.WriteLine($"{gear.ListPullRequests()}");
+			Console.WriteLine($"{await gear.ListPullRequestsAsync()}");
 			Console.WriteLine("-- ListIssues --");
-			Console.WriteLine($"{gear.ListIssues()}");
+			Console.WriteLine($"{await gear.ListIssuesAsync()}");
 			Console.WriteLine("-- ListGists --");
-			Console.WriteLine($"{gear.ListGists()}");
+			Console.WriteLine($"{await gear.ListGistsAsync()}");
 			Console.WriteLine("-- ListRepos --");
-			Console.WriteLine($"{gear.ListRepos()}");
+			Console.WriteLine($"{await gear.ListReposAsync()}");
 		}
 
 		return 0;

@@ -1,10 +1,11 @@
 using System;
+using System.Threading.Tasks;
 
 namespace git_gears
 {
 public class CreateIssue
 {
-	public static int Execute(CreateIssueOptions opts)
+	public static async Task<int> ExecuteAsync(CreateIssueOptions opts)
 	{
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
@@ -13,7 +14,7 @@ public class CreateIssue
 
 		if (gear != null)
 		{
-			IssueInfo? issue = gear.CreateIssue(new CreateIssueParams{title = opts.Title, body = opts.Body});
+			IssueInfo? issue = await gear.CreateIssueAsync(new CreateIssueParams{title = opts.Title, body = opts.Body});
 			if (issue.HasValue)
 			{
 				Console.WriteLine($"Created new issue on {opts.Remote}");

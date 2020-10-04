@@ -1,10 +1,11 @@
 using System;
+using System.Threading.Tasks;
 
 namespace git_gears
 {
 public class GetOwner
 {
-	public static int Execute(GetOwnerOptions opts)
+	public static async Task<int> ExecuteAsync(GetOwnerOptions opts)
 	{
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
@@ -15,7 +16,7 @@ public class GetOwner
 
 		if (gear != null)
 		{
-			OwnerInfo? owner = gear.GetOwner(url.Owner);
+			OwnerInfo? owner = await gear.GetOwnerAsync(url.Owner);
 			if (owner.HasValue)
 			{
 				Console.WriteLine($"Owner for {opts.Remote}");

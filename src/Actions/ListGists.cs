@@ -1,10 +1,11 @@
 using System;
+using System.Threading.Tasks;
 
 namespace git_gears
 {
 public class ListGists
 {
-	public static int Execute(ListGistsOptions opts)
+	public static async Task<int> ExecuteAsync(ListGistsOptions opts)
 	{
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
@@ -13,7 +14,7 @@ public class ListGists
 		if (gear != null)
 		{
 			Console.WriteLine("-- ListGists --");
-			var gists = gear.ListGists();
+			var gists = await gear.ListGistsAsync();
 			foreach(var i in gists)
 			{
 				Console.WriteLine($"{i.Description} - {i.Name} - {i.Id} - {i.Url}");
