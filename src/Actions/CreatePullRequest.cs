@@ -1,10 +1,11 @@
 using System;
+using System.Threading.Tasks;
 
 namespace git_gears
 {
 public class CreatePullRequest
 {
-	public static int Execute(CreatePullRequestOptions opts)
+	public static async Task<int> ExecuteAsync(CreatePullRequestOptions opts)
 	{
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
@@ -19,7 +20,7 @@ public class CreatePullRequest
 
 		if (gear != null)
 		{
-			PullRequestInfo? pr = gear.CreatePullRequest(new CreatePullRequestParams{
+			PullRequestInfo? pr = await gear.CreatePullRequestAsync(new CreatePullRequestParams{
 				branch = branch, targetBranch = opts.TargetBranch, title = title, body = body});
 			if (pr.HasValue)
 			{

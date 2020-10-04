@@ -1,10 +1,11 @@
 using System;
+using System.Threading.Tasks;
 
 namespace git_gears
 {
 public class CreateGist
 {
-	public static int Execute(CreateGistOptions opts)
+	public static async Task<int> ExecuteAsync(CreateGistOptions opts)
 	{
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
@@ -13,7 +14,7 @@ public class CreateGist
 
 		if (gear != null)
 		{
-			GistInfo? gist = gear.CreateGist(new CreateGistParams{
+			GistInfo? gist = await gear.CreateGistAsync(new CreateGistParams{
 				title = opts.Title,				//
 				description = opts.Description, //
 				filename = opts.Filename,		//

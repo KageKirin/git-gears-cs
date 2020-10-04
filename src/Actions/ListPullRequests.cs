@@ -1,10 +1,11 @@
 using System;
+using System.Threading.Tasks;
 
 namespace git_gears
 {
 public class ListPullRequests
 {
-	public static int Execute(ListPullRequestsOptions opts)
+	public static async Task<int> ExecuteAsync(ListPullRequestsOptions opts)
 	{
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
@@ -13,7 +14,7 @@ public class ListPullRequests
 		if (gear != null)
 		{
 			Console.WriteLine("-- ListPullRequests --");
-			var prs = gear.ListPullRequests();
+			var prs = await gear.ListPullRequestsAsync();
 			foreach(var i in prs)
 			{
 				Console.WriteLine($"#{i.Number} - {i.Title} - {i.Url}");

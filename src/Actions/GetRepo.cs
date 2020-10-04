@@ -1,10 +1,11 @@
 using System;
+using System.Threading.Tasks;
 
 namespace git_gears
 {
 public class GetRepo
 {
-	public static int Execute(GetRepoOptions opts)
+	public static async Task<int> ExecuteAsync(GetRepoOptions opts)
 	{
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
@@ -13,7 +14,7 @@ public class GetRepo
 
 		if (gear != null)
 		{
-			RepoInfo? repo = gear.GetRepo();
+			RepoInfo? repo = await gear.GetRepoAsync();
 			if (repo.HasValue)
 			{
 				Console.WriteLine($"Repo for {opts.Remote}");

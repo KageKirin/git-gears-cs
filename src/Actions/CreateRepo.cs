@@ -1,10 +1,11 @@
 using System;
+using System.Threading.Tasks;
 
 namespace git_gears
 {
 public class CreateRepo
 {
-	public static int Execute(CreateRepoOptions opts)
+	public static async Task<int> ExecuteAsync(CreateRepoOptions opts)
 	{
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
@@ -13,7 +14,7 @@ public class CreateRepo
 
 		if (gear != null)
 		{
-			RepoInfo? repo = gear.CreateRepo(new CreateRepoParams{
+			RepoInfo? repo = await gear.CreateRepoAsync(new CreateRepoParams{
 				description = opts.Description,
 				homepage = opts.Homepage,
 				isPublic = !opts.IsPrivate,

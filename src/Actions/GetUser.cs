@@ -1,10 +1,11 @@
 using System;
+using System.Threading.Tasks;
 
 namespace git_gears
 {
 public class GetUser
 {
-	public static int Execute(GetUserOptions opts)
+	public static async Task<int> ExecuteAsync(GetUserOptions opts)
 	{
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
@@ -15,7 +16,7 @@ public class GetUser
 
 		if (gear != null)
 		{
-			UserInfo? user = gear.GetUser(url.Owner);
+			UserInfo? user = await gear.GetUserAsync(url.Owner);
 			if (user.HasValue)
 			{
 				Console.WriteLine($"Owning user for {opts.Remote}");

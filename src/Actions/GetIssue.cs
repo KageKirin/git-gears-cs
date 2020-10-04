@@ -1,10 +1,11 @@
 using System;
+using System.Threading.Tasks;
 
 namespace git_gears
 {
 public class GetIssue
 {
-	public static int Execute(GetIssueOptions opts)
+	public static async Task<int> ExecuteAsync(GetIssueOptions opts)
 	{
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
@@ -13,7 +14,7 @@ public class GetIssue
 
 		if (gear != null)
 		{
-			IssueInfo? issue = gear.GetIssue(opts.Number);
+			IssueInfo? issue = await gear.GetIssueAsync(opts.Number);
 			if (issue.HasValue)
 			{
 				Console.WriteLine($"Issue {opts.Number} for {opts.Remote}");

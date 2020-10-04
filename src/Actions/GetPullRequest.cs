@@ -1,10 +1,11 @@
 using System;
+using System.Threading.Tasks;
 
 namespace git_gears
 {
 public class GetPullRequest
 {
-	public static int Execute(GetPullRequestOptions opts)
+	public static async Task<int> ExecuteAsync(GetPullRequestOptions opts)
 	{
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
@@ -15,7 +16,7 @@ public class GetPullRequest
 
 		if (gear != null)
 		{
-			PullRequestInfo? pr = gear.GetPullRequest(branch);
+			PullRequestInfo? pr = await gear.GetPullRequestAsync(branch);
 			if (pr.HasValue)
 			{
 				Console.WriteLine($"PullRequest for {opts.Remote}/{branch}");

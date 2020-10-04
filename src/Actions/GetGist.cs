@@ -1,10 +1,11 @@
 using System;
+using System.Threading.Tasks;
 
 namespace git_gears
 {
 public class GetGist
 {
-	public static int Execute(GetGistOptions opts)
+	public static async Task<int> ExecuteAsync(GetGistOptions opts)
 	{
 		Console.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
@@ -13,7 +14,7 @@ public class GetGist
 
 		if (gear != null)
 		{
-			GistInfo? gist = gear.GetGist(opts.Name);
+			GistInfo? gist = await gear.GetGistAsync(opts.Name);
 			if (gist.HasValue)
 			{
 				Console.WriteLine($"Gist {opts.Name} for {opts.Remote}");
