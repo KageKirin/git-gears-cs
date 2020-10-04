@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using LibGit2Sharp;
 using CommandLine;
 
@@ -6,9 +7,9 @@ namespace git_gears
 {
 class Program
 {
-	static int Main(string[] args)
+	static async Task<int> Main(string[] args)
 	{
-		return Parser.Default
+		return await Parser.Default
 			.ParseArguments<			  //
 				CreateGistOptions,		  //
 				CreateIssueOptions,		  //
@@ -27,24 +28,24 @@ class Program
 				GetOrganizationOptions,	  //
 				TestOptions				  //
 				>(args)
-			.MapResult(																//
-				(CreateGistOptions opts) => CreateGist.Execute(opts),				//
-				(CreateIssueOptions opts) => CreateIssue.Execute(opts),				//
-				(CreatePullRequestOptions opts) => CreatePullRequest.Execute(opts), //
-				(CreateRepoOptions opts) => CreateRepo.Execute(opts),				//
-				(GetGistOptions opts) => GetGist.Execute(opts),						//
-				(GetIssueOptions opts) => GetIssue.Execute(opts),					//
-				(GetPullRequestOptions opts) => GetPullRequest.Execute(opts),		//
-				(GetRepoOptions opts) => GetRepo.Execute(opts),						//
-				(ListGistsOptions opts) => ListGists.Execute(opts),					//
-				(ListIssuesOptions opts) => ListIssues.Execute(opts),				//
-				(ListPullRequestsOptions opts) => ListPullRequests.Execute(opts),	//
-				(ListReposOptions opts) => ListRepos.Execute(opts),					//
-				(GetUserOptions opts) => GetUser.Execute(opts),						//
-				(GetOwnerOptions opts) => GetOwner.Execute(opts),					//
-				(GetOrganizationOptions opts) => GetOrganization.Execute(opts),		//
-				(TestOptions opts) => Test.Execute(opts),							//
-				(errs) => 1);
+			.MapResult(																	 //
+				(CreateGistOptions opts) => CreateGist.ExecuteAsync(opts),				 //
+				(CreateIssueOptions opts) => CreateIssue.ExecuteAsync(opts),			 //
+				(CreatePullRequestOptions opts) => CreatePullRequest.ExecuteAsync(opts), //
+				(CreateRepoOptions opts) => CreateRepo.ExecuteAsync(opts),				 //
+				(GetGistOptions opts) => GetGist.ExecuteAsync(opts),					 //
+				(GetIssueOptions opts) => GetIssue.ExecuteAsync(opts),					 //
+				(GetPullRequestOptions opts) => GetPullRequest.ExecuteAsync(opts),		 //
+				(GetRepoOptions opts) => GetRepo.ExecuteAsync(opts),					 //
+				(ListGistsOptions opts) => ListGists.ExecuteAsync(opts),				 //
+				(ListIssuesOptions opts) => ListIssues.ExecuteAsync(opts),				 //
+				(ListPullRequestsOptions opts) => ListPullRequests.ExecuteAsync(opts),	 //
+				(ListReposOptions opts) => ListRepos.ExecuteAsync(opts),				 //
+				(GetUserOptions opts) => GetUser.ExecuteAsync(opts),					 //
+				(GetOwnerOptions opts) => GetOwner.ExecuteAsync(opts),					 //
+				(GetOrganizationOptions opts) => GetOrganization.ExecuteAsync(opts),	 //
+				(TestOptions opts) => Test.ExecuteAsync(opts),							 //
+				(errs) => Task.Run(() => 1));
 	}
 }
 }
