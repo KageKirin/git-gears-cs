@@ -15,7 +15,7 @@ public class ListGists
 		{
 			Console.WriteLine("-- ListGists --");
 			var gists = await gear.ListGistsAsync();
-			foreach(var i in gists)
+			foreach (var i in gists)
 			{
 				Console.WriteLine($"{i.Description} - {i.Name} - {i.Id} - {i.Url}");
 			}

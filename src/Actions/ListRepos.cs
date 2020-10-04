@@ -15,7 +15,7 @@ public class ListRepos
 		{
 			Console.WriteLine("-- ListRepos --");
 			var repos = await gear.ListReposAsync();
-			foreach(var i in repos)
+			foreach (var i in repos)
 			{
 				Console.WriteLine($"{i.Name} - {i.Description} - {i.Url}");
 			}

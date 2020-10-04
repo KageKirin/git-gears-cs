@@ -20,7 +20,8 @@ public class GetOrganization
 			if (org.HasValue)
 			{
 				Console.WriteLine($"Owning organization for {opts.Remote}");
-				Console.WriteLine($"{org.Value.Name} -- {org.Value.Description} -- {org.Value.Url} -- {org.Value.Website}");
+				Console.WriteLine(
+					$"{org.Value.Name} -- {org.Value.Description} -- {org.Value.Url} -- {org.Value.Website}");
 			}
 			else
 			{
