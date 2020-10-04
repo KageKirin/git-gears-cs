@@ -20,7 +20,8 @@ public class GetUser
 			if (user.HasValue)
 			{
 				Console.WriteLine($"Owning user for {opts.Remote}");
-				Console.WriteLine($"{user.Value.Name} -- {user.Value.Login} -- {user.Value.Url} -- {user.Value.Website}");
+				Console.WriteLine(
+					$"{user.Value.Name} -- {user.Value.Login} -- {user.Value.Url} -- {user.Value.Website}");
 			}
 			else
 			{

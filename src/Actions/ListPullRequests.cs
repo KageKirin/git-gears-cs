@@ -15,7 +15,7 @@ public class ListPullRequests
 		{
 			Console.WriteLine("-- ListPullRequests --");
 			var prs = await gear.ListPullRequestsAsync();
-			foreach(var i in prs)
+			foreach (var i in prs)
 			{
 				Console.WriteLine($"#{i.Number} - {i.Title} - {i.Url}");
 			}

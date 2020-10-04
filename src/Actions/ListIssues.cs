@@ -15,7 +15,7 @@ public class ListIssues
 		{
 			Console.WriteLine("-- ListIssues --");
 			var issues = await gear.ListIssuesAsync();
-			foreach(var i in issues)
+			foreach (var i in issues)
 			{
 				Console.WriteLine($"#{i.Number} - {i.Title} - {i.Url}");
 			}
