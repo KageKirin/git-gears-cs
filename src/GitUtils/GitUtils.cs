@@ -74,11 +74,11 @@ class GitUtils
 	{
 		using(var repo = new Repository(FindCurrentRepoPath()))
 		{
-			foreach(var configLevel in Enum.GetValues(typeof (ConfigurationLevel)).Cast<ConfigurationLevel>().Reverse())
+			foreach (var configLevel in Enum.GetValues(typeof(ConfigurationLevel)).Cast<ConfigurationLevel>().Reverse())
 			{
 				if (repo.Config.HasConfig(configLevel))
 				{
-					foreach(var entry in repo.Config.Find(key, configLevel))
+					foreach (var entry in repo.Config.Find(key, configLevel))
 					{
 						return entry.Value;
 					}
@@ -189,7 +189,7 @@ class GitUtils
 		const bool ignoreCase = true;
 		try
 		{
-			return (GearsApiType) Enum.Parse(typeof (GearsApiType), GetGearsConfigEntry("api", remoteName), ignoreCase);
+			return (GearsApiType) Enum.Parse(typeof(GearsApiType), GetGearsConfigEntry("api", remoteName), ignoreCase);
 		}
 		catch (ArgumentException)
 		{
@@ -218,7 +218,7 @@ class GitUtils
 	{
 		using(var repo = new Repository(FindCurrentRepoPath()))
 		{
-			foreach(var r in repo.Network.Remotes)
+			foreach (var r in repo.Network.Remotes)
 			{
 				Console.WriteLine($"name: {r.Name}");
 				Console.WriteLine($"url: {r.Url}");
@@ -245,7 +245,7 @@ class GitUtils
 			Console.WriteLine(repo.Config.HasConfig(ConfigurationLevel.Global));
 			Console.WriteLine(repo.Config.HasConfig(ConfigurationLevel.Local));
 
-			foreach(var c in repo.Config)
+			foreach (var c in repo.Config)
 			{
 				// Console.WriteLine("{0} -> {1}", c.Key, c.Value);
 			}
@@ -253,7 +253,7 @@ class GitUtils
 			if (repo.Config.HasConfig(ConfigurationLevel.Local))
 			{
 
-				foreach(var c in repo.Config.Find(@"(gears).*", ConfigurationLevel.Local))
+				foreach (var c in repo.Config.Find(@"(gears).*", ConfigurationLevel.Local))
 				{
 					Console.WriteLine("{0} -> {1}", c.Key, c.Value);
 				}
@@ -262,7 +262,7 @@ class GitUtils
 			if (repo.Config.HasConfig(ConfigurationLevel.Global))
 			{
 
-				foreach(var c in repo.Config.Find(@"(gears).*", ConfigurationLevel.Global))
+				foreach (var c in repo.Config.Find(@"(gears).*", ConfigurationLevel.Global))
 				{
 					Console.WriteLine("{0} -> {1}", c.Key, c.Value);
 				}
