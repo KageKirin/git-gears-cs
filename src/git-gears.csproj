@@ -4,7 +4,6 @@
     <Authors>Chris 'KageKirin' Helmich</Authors>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>
-    <PublishTrimmed>true</PublishTrimmed>
     <PublishReadyToRun>true</PublishReadyToRun>
     <PublishSingleFile>true</PublishSingleFile>
     <RootNamespace>git_gears</RootNamespace>
