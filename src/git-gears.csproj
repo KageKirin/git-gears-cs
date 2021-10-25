@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Authors>Chris 'KageKirin' Helmich</Authors>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <PublishTrimmed>true</PublishTrimmed>
