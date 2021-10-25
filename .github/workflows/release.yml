@@ -1,0 +1,131 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
+
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  check:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+          include-prerelease: true
+
+      - name: Dotnet Restore
+        run: dotnet restore src/git-gears.csproj
+
+      - name: Dotnet Build (win10-x64)
+        run: |
+          dotnet publish -c Release -f net6.0 -r win10-x64 --self-contained src/git-gears.csproj
+          ls src/bin/Release/net6.0/win10-x64/publish/
+      - name: Upload build artifacts (win10-x64)
+        uses: actions/upload-artifact@v2
+        with:
+          path: src/bin/Release/net6.0/win10-x64/publish/git-gears.exe
+
+      - name: Dotnet Build (osx.11.0-x64)
+        run: |
+          dotnet publish -c Release -f net6.0 -r osx.11.0-x64 --self-contained src/git-gears.csproj
+          ls src/bin/Release/net6.0/osx.11.0-x64/publish/
+      - name: Upload build artifacts (osx.11.0-x64)
+        uses: actions/upload-artifact@v2
+        with:
+          path: src/bin/Release/net6.0/osx.11.0-x64/publish/git-gears
+
+      - name: Dotnet Build (linux-x64)
+        run: |
+          dotnet publish -c Release -f net6.0 -r linux-x64 --self-contained src/git-gears.csproj
+          ls src/bin/Release/net6.0/linux-x64/publish/
+      - name: Upload build artifacts (linux-x64)
+        uses: actions/upload-artifact@v2
+        with:
+          path: src/bin/Release/net6.0/linux-x64/publish/git-gears
+
+      - name: Dotnet Build (linux-musl-x64)
+        run: |
+          dotnet publish -c Release -f net6.0 -r linux-musl-x64 --self-contained src/git-gears.csproj
+          ls src/bin/Release/net6.0/linux-musl-x64/publish/
+      - name: Upload build artifacts (linux-musl-x64)
+        uses: actions/upload-artifact@v2
+        with:
+          path: src/bin/Release/net6.0/linux-musl-x64/publish/git-gears
+
+      - name: Create release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: Release ${{ github.ref }}
+          tag_name: ${{ github.ref }}
+          #body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }}
+
+      - name: Prepare release artifacts (win10-x64)
+        run: |
+          ls ./src/bin/Release/net6.0/win10-x64/publish/
+          tar caf git-gears.win10-x64.tar.gz -C ./src/bin/Release/net6.0/win10-x64/publish/ .
+          tar tvf git-gears.win10-x64.tar.gz
+      - name: Upload release artifacts (win10-x64)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./git-gears.win10-x64.tar.gz
+          asset_name: git-gears.win10-x64.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Prepare release artifacts (osx.11.0-x64)
+        run: |
+          ls ./src/bin/Release/net6.0/osx.11.0-x64/publish/
+          tar caf git-gears.osx.11.0-x64.tar.gz -C ./src/bin/Release/net6.0/osx.11.0-x64/publish/ .
+          tar tvf git-gears.osx.11.0-x64.tar.gz
+      - name: Upload release artifacts (osx.11.0-x64)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./git-gears.osx.11.0-x64.tar.gz
+          asset_name: git-gears.osx.11.0-x64.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Prepare release artifacts (linux-x64)
+        run: |
+          ls ./src/bin/Release/net6.0/linux-x64/publish/
+          tar caf git-gears.linux-x64.tar.gz -C ./src/bin/Release/net6.0/linux-x64/publish/ .
+          tar tvf git-gears.linux-x64.tar.gz
+      - name: Upload release artifacts (linux-x64)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./git-gears.linux-x64.tar.gz
+          asset_name: git-gears.linux-x64.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Prepare release artifacts (linux-musl-x64)
+        run: |
+          ls ./src/bin/Release/net6.0/linux-musl-x64/publish/
+          tar caf git-gears.linux-musl-x64.tar.gz -C ./src/bin/Release/net6.0/linux-musl-x64/publish/ .
+          tar tvf git-gears.linux-musl-x64.tar.gz
+      - name: Upload release artifacts (linux-musl-x64)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./git-gears.linux-musl-x64.tar.gz
+          asset_name: git-gears.linux-musl-x64.tar.gz
+          asset_content_type: application/gzip
