@@ -7,6 +7,7 @@
     <PublishTrimmed>true</PublishTrimmed>
     <PublishReadyToRun>true</PublishReadyToRun>
     <PublishSingleFile>true</PublishSingleFile>
+    <RuntimeIdentifiers>win10-x64;osx.11.0-x64;linux-x64;linux-musl-x64</RuntimeIdentifiers>
     <RootNamespace>git_gears</RootNamespace>
   </PropertyGroup>
 
