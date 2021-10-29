@@ -11,7 +11,7 @@ public abstract class CommonOptions
 		set;
 	}
 
-	[Value(0, MetaName = "remote", HelpText = "Remote.", Default = null)]
+	[Value(0, MetaName = "remote", HelpText = "Remote.", Default = "origin")]
 	public string Remote
 	{
 		get;
