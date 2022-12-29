@@ -11,7 +11,7 @@ public abstract class CommonOptions
 		set;
 	}
 
-	[Value(0, MetaName = "remote", HelpText = "Remote.", Default = "origin")]
+	[Value(0, MetaName = "remote", HelpText = "Remote.", Default = "origin")] // TODO: Default to config setting
 	public string Remote
 	{
 		get;
